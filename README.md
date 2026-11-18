@@ -253,6 +253,7 @@ The site is published as the **user site** `https://dimassahid.github.io/` from 
 1. GitHub -> **Settings -> Pages -> Build and deployment -> Source: GitHub Actions**.
 2. Check that `SITE_URL` matches the deployed origin. The workflow passes `SITE_URL=https://dimassahid.github.io` to `astro build`, and `astro.config.mjs` / `src/data/site.ts` default to the same origin. A wrong value silently breaks canonical tags, the sitemap, RSS and Open Graph URLs.
 3. Keep `dist/`, `.astro/`, `node_modules/` and `.env` out of git - `.gitignore` already covers them. `.env` holds `NOTION_TOKEN`, which must stay local.
+4. Make sure git can authenticate non-interactively, otherwise `git push` blocks on a username/password prompt and no deploy starts. Either sign in once with the GitHub CLI (`gh auth login --web`, then `gh auth setup-git`) or store a PAT with `Contents: read and write` (`git config --global credential.helper store`, then push once and paste the token as the password). Verify with `git ls-remote origin main` before relying on it.
 
 ### Everyday deploy
 
