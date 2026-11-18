@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { defaultLanguage, languages, site, type Lang } from "../data/site";
+import { useTranslations } from "../utils/i18n";
+
+const lang: Lang = defaultLanguage;
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.notFound.title}
+  description={t.notFound.text}
+  canonicalPath="/404.html"
+  currentPath="/"
+  noindex={true}
+>
+  <section class="section">
+    <div class="wrap error-page">
+      <p class="error-code">404</p>
+      <h1>{t.notFound.title}</h1>
+      <p>{t.notFound.text}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={`/${lang}/`}>{t.notFound.cta}</a>
+        <a class="btn" href={`/${lang}/notes/`}>{t.notFound.notesCta}</a>
+        {languages
+          .filter((code) => code !== lang)
+          .map((code) => (
+            <a class="btn btn-ghost" href={`/${code}/`} hreflang={code}>
+              {site.name} / {code.toUpperCase()}
+            </a>
+          ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

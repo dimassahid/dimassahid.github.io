@@ -1,0 +1,60 @@
+---
+import { categoryLabel } from "../data/categories";
+import { languageMeta, type Lang } from "../data/site";
+import type { Post } from "../utils/content";
+import { fill, formatDate, useTranslations } from "../utils/i18n";
+
+interface Props {
+  post: Post;
+  lang: Lang;
+}
+
+const { post, lang } = Astro.props;
+const t = useTranslations(lang);
+const category = categoryLabel(post.category, lang);
+const sectionBase = `/${lang}/${post.section}/`;
+const published = formatDate(post.publishDate, lang);
+---
+
+<article class="card">
+  <div class="card-meta">
+    <span class="badge badge-accent">{category}</span>
+    <time datetime={post.publishDate.toISOString()}>{published}</time>
+    <span aria-hidden="true">&middot;</span>
+    <span>{fill(t.article.readingTime, { minutes: post.readingTime })}</span>
+  </div>
+
+  <h3 class="card-title">
+    <a href={post.href}>{post.title}</a>
+  </h3>
+
+  <p class="card-text">{post.description}</p>
+
+  {
+    post.tags.length > 0 && (
+      <ul class="tag-list">
+        {post.tags.map((tag) => (
+          <li>
+            <a class="tag" href={`${sectionBase}?tag=${encodeURIComponent(tag)}`}>
+              #{tag}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <div class="card-footer">
+    {
+      post.sample ? (
+        <span class="badge">{t.common.sampleBadge}</span>
+      ) : post.isFallback ? (
+        <span class="badge">
+          {fill(t.listing.availableIn, { language: languageMeta[post.sourceLang].label })}
+        </span>
+      ) : (
+        <span class="badge badge-dot">{t.common.published}</span>
+      )
+    }
+  </div>
+</article>

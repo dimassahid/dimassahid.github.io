@@ -1,0 +1,6 @@
+---
+import { defaultLanguage } from "../data/site";
+
+// Single entry point: send visitors to the default language home page.
+return Astro.redirect(`/${defaultLanguage}/`, 302);
+---

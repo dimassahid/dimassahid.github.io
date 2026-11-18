@@ -1,0 +1,100 @@
+---
+import { categoryLabel } from "../data/categories";
+import type { Project } from "../data/projects";
+import type { Lang } from "../data/site";
+import { formatMonth, useTranslations } from "../utils/i18n";
+
+interface Props {
+  project: Project;
+  lang: Lang;
+}
+
+const { project, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const statusLabels: Record<Project["status"], string> = {
+  concept: t.portfolio.statusConcept,
+  active: t.portfolio.statusActive,
+  completed: t.portfolio.statusCompleted,
+  archived: t.portfolio.statusArchived
+};
+
+const category = categoryLabel(project.category, lang);
+const period = formatMonth(project.date, lang);
+const highlights = project.highlights?.[lang] ?? [];
+const searchText = [project.name, project.description[lang], category, ...project.technologies]
+  .join(" ")
+  .toLowerCase();
+---
+
+<article
+  class="card project-card"
+  data-category={project.category}
+  data-search={searchText}
+  data-demo={project.demo ? "true" : "false"}
+>
+  <div class="card-meta">
+    <span class="badge badge-accent">{category}</span>
+    <span class="badge">{statusLabels[project.status]}</span>
+    {project.demo && <span class="badge">{t.common.sampleBadge}</span>}
+  </div>
+
+  <h3 class="card-title">{project.name}</h3>
+  <p class="card-text">{project.description[lang]}</p>
+
+  {
+    highlights.length > 0 && (
+      <ul class="prose-highlights">
+        {highlights.map((highlight) => (
+          <li>{highlight}</li>
+        ))}
+      </ul>
+    )
+  }
+
+  <ul class="tag-list">
+    {project.technologies.map((tech) => (
+      <li><span class="tag">{tech}</span></li>
+    ))}
+  </ul>
+
+  <div class="card-footer">
+    <div class="card-meta">
+      <span>{t.portfolio.periodLabel}: {period}</span>
+    </div>
+    {
+      (project.repository || project.url) && (
+        <div class="btn-row" style="margin-top: 0.75rem;">
+          {project.repository && (
+            <a class="btn btn-sm" href={project.repository} target="_blank" rel="noopener noreferrer">
+              {t.portfolio.viewRepository}
+              <span class="visually-hidden">({t.common.external})</span>
+            </a>
+          )}
+          {project.url && (
+            <a class="btn btn-sm" href={project.url} target="_blank" rel="noopener noreferrer">
+              {t.portfolio.viewProject}
+              <span class="visually-hidden">({t.common.external})</span>
+            </a>
+          )}
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .prose-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .prose-highlights li::marker {
+    color: var(--accent-2);
+  }
+</style>

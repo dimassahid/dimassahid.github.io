@@ -1,0 +1,239 @@
+---
+import type { MarkdownHeading } from "astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import { categoryLabel } from "../data/categories";
+import { languageMeta, navigation, site, type Lang } from "../data/site";
+import { getAdjacentPosts, getRelatedPosts, type Post, type PostDetail } from "../utils/content";
+import { fill, formatDate, localizePath, useTranslations } from "../utils/i18n";
+import { articleJsonLd, breadcrumbJsonLd } from "../utils/seo";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  post: Post;
+  detail: PostDetail;
+  headings: MarkdownHeading[];
+}
+
+const { post, detail, headings } = Astro.props;
+const lang = post.lang;
+const t = useTranslations(lang);
+
+const otherLang: Lang = lang === "id" ? "en" : "id";
+const hasTranslation = detail.availableLanguages.includes(otherLang);
+
+const sectionLabel = t[post.section].title;
+const sectionHref = localizePath(`/${post.section}/`, lang);
+const canonicalPath = `/${lang}/${post.section}/${post.slug}/`;
+const otherPath = localizePath(`/${post.section}/${post.slug}/`, otherLang);
+
+const alternates: Partial<Record<Lang, string>> = {
+  [lang]: canonicalPath,
+  ...(hasTranslation ? { [otherLang]: otherPath } : {})
+};
+
+const related = await getRelatedPosts(post, 3);
+const { previous, next } = await getAdjacentPosts(post);
+
+const category = categoryLabel(post.category, lang);
+const homeLabel = navigation[0]?.label[lang] ?? site.name;
+
+const notices = [
+  post.isFallback
+    ? fill(t.article.missingTranslationNote, { language: languageMeta[lang].label })
+    : null,
+  post.translationStatus === "machine" ? t.article.machineTranslationNote : null,
+  post.translationStatus === "reviewed" ? t.article.reviewedTranslationNote : null
+].filter((notice): notice is string => Boolean(notice));
+
+const jsonLd = [
+  articleJsonLd({
+    title: post.title,
+    description: post.description,
+    url: canonicalPath,
+    lang,
+    publishDate: post.publishDate,
+    updatedDate: post.updatedDate,
+    author: post.author,
+    tags: post.tags
+  }),
+  breadcrumbJsonLd([
+    { label: homeLabel, path: `/${lang}/` },
+    { label: sectionLabel, path: `/${lang}/${post.section}/` },
+    { label: post.title, path: canonicalPath }
+  ])
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={post.title}
+  description={post.description}
+  canonicalPath={canonicalPath}
+  alternates={alternates}
+  type="article"
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="page-header">
+      <div class="wrap wrap-narrow">
+        <nav class="breadcrumbs" aria-label={t.common.menu}>
+          <ol>
+            <li><a href={`/${lang}/`}>{homeLabel}</a></li>
+            <li><a href={sectionHref}>{sectionLabel}</a></li>
+            <li aria-current="page">{post.title}</li>
+          </ol>
+        </nav>
+
+        <p class="kicker">{sectionLabel}</p>
+        <h1 class="page-title">{post.title}</h1>
+        <p class="page-lead">{post.description}</p>
+
+        <div class="article-meta">
+          <span class="badge badge-accent">{category}</span>
+          <span>
+            {t.article.publishedLabel}:
+            <time datetime={post.publishDate.toISOString()}>{formatDate(post.publishDate, lang)}</time>
+          </span>
+          {post.updatedDate && (
+            <span>
+              {t.article.lastUpdated}:
+              <time datetime={post.updatedDate.toISOString()}>{formatDate(post.updatedDate, lang)}</time>
+            </span>
+          )}
+          <span>{fill(t.article.readingTime, { minutes: post.readingTime })}</span>
+          {post.author && <span>{t.article.authorLabel}: {post.author}</span>}
+        </div>
+
+        {post.sample && (
+          <p class="sample-banner" style="margin-top: 1.25rem;">
+            <strong>{t.common.sampleBadge}</strong>
+            <span>{t.common.sampleContentNote}</span>
+          </p>
+        )}
+
+        {notices.map((notice) => (
+          <p class="notice notice-warning" style="margin-top: 1rem;">{notice}</p>
+        ))}
+
+        {hasTranslation && (
+          <p class="eyebrow" style="margin-top: 1rem;">
+            {t.article.alsoAvailableIn}:{" "}
+            <a href={otherPath} hreflang={languageMeta[otherLang].htmlLang}>
+              {languageMeta[otherLang].label}
+            </a>
+          </p>
+        )}
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="article-layout">
+        <div class="article-main">
+          <span
+            class="visually-hidden"
+            data-code-labels
+            data-copy={t.article.copyCode}
+            data-copied={t.article.copied}
+            data-failed={t.article.copyFailed}
+          ></span>
+          <div class="prose">
+            <slot />
+          </div>
+
+          <footer class="article-footer">
+            {post.tags.length > 0 && (
+              <ul class="tag-list">
+                {post.tags.map((tag) => (
+                  <li>
+                    <a class="tag" href={`${sectionHref}?tag=${encodeURIComponent(tag)}`}>#{tag}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <p class="notice" style="margin-top: 1.25rem;">{t.article.disclosure}</p>
+
+            <nav class="article-nav" aria-label={t.article.relatedTitle}>
+              {previous ? (
+                <a class="article-nav-link" href={previous.href}>
+                  <span>{t.article.previous}</span>
+                  <strong>{previous.title}</strong>
+                </a>
+              ) : (
+                <span />
+              )}
+              {next && (
+                <a class="article-nav-link is-next" href={next.href}>
+                  <span>{t.article.next}</span>
+                  <strong>{next.title}</strong>
+                </a>
+              )}
+            </nav>
+
+            <div class="btn-row" style="margin-top: 1.75rem;">
+              <a class="btn btn-ghost" href={sectionHref}>
+                {fill(t.article.backToSection, { section: sectionLabel })}
+              </a>
+            </div>
+          </footer>
+        </div>
+
+        <aside class="article-aside">
+          <TableOfContents headings={headings} title={t.article.tocTitle} />
+        </aside>
+      </div>
+
+      {related.length > 0 && (
+        <section class="section-tight">
+          <div class="section-head">
+            <div>
+              <p class="kicker">{sectionLabel}</p>
+              <h2 class="section-title">{t.article.relatedTitle}</h2>
+            </div>
+          </div>
+          <div class="grid grid-cards">
+            {related.map((item) => (
+              <ArticleCard post={item} lang={lang} />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  const labelsEl = document.querySelector<HTMLElement>("[data-code-labels]");
+  const labels = {
+    copy: labelsEl?.dataset.copy ?? "Copy code",
+    copied: labelsEl?.dataset.copied ?? "Copied",
+    failed: labelsEl?.dataset.failed ?? "Copy failed"
+  };
+
+  for (const pre of document.querySelectorAll<HTMLElement>(".prose pre")) {
+    if (pre.querySelector(".code-copy")) continue;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "code-copy";
+    button.textContent = labels.copy;
+
+    button.addEventListener("click", async () => {
+      const code = pre.querySelector("code")?.textContent ?? pre.textContent ?? "";
+      try {
+        await navigator.clipboard.writeText(code);
+        button.dataset.copied = "true";
+        button.textContent = labels.copied;
+      } catch {
+        button.textContent = labels.failed;
+      }
+      window.setTimeout(() => {
+        button.dataset.copied = "false";
+        button.textContent = labels.copy;
+      }, 2000);
+    });
+
+    pre.appendChild(button);
+  }
+</script>

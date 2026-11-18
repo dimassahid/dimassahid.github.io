@@ -1,0 +1,77 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+  title: string;
+}
+
+const { headings, title } = Astro.props;
+
+const items = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const groups: Array<{ heading: MarkdownHeading; children: MarkdownHeading[] }> = [];
+
+for (const heading of items) {
+  if (heading.depth === 2 || groups.length === 0) {
+    groups.push({ heading, children: [] });
+  } else {
+    groups[groups.length - 1]?.children.push(heading);
+  }
+}
+---
+
+{
+  items.length > 1 && (
+    <nav class="toc" aria-labelledby="toc-title" data-toc>
+      <h2 class="toc-title" id="toc-title">
+        {title}
+      </h2>
+      <ol>
+        {groups.map((group) => (
+          <li>
+            <a href={`#${group.heading.slug}`}>{group.heading.text}</a>
+            {group.children.length > 0 && (
+              <ol>
+                {group.children.map((child) => (
+                  <li>
+                    <a href={`#${child.slug}`}>{child.text}</a>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<script>
+  const toc = document.querySelector<HTMLElement>("[data-toc]");
+  const links = toc ? Array.from(toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) : [];
+
+  if (toc && links.length > 0) {
+    const byId = new Map(links.map((link) => [decodeURIComponent(link.hash.slice(1)), link]));
+
+    const setCurrent = (id: string) => {
+      for (const link of links) link.removeAttribute("aria-current");
+      const active = byId.get(id);
+      if (active) active.setAttribute("aria-current", "true");
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]?.target.id) setCurrent(visible[0].target.id);
+      },
+      { rootMargin: "-90px 0px -65% 0px", threshold: [0, 1] }
+    );
+
+    for (const id of byId.keys()) {
+      const heading = document.getElementById(id);
+      if (heading) observer.observe(heading);
+    }
+  }
+</script>

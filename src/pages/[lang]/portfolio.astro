@@ -1,0 +1,133 @@
+---
+import ProjectCard from "../../components/ProjectCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { categoryLabel } from "../../data/categories";
+import { getProjects } from "../../data/projects";
+import { languages, type Lang } from "../../data/site";
+import { useTranslations } from "../../utils/i18n";
+import { breadcrumbJsonLd } from "../../utils/seo";
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const projects = getProjects();
+
+const categoryKeys = [...new Set(projects.map((project) => project.category))];
+const categories = categoryKeys.map((key) => ({
+  key,
+  label: categoryLabel(key, lang),
+  count: projects.filter((project) => project.category === key).length
+}));
+
+const jsonLd = [
+  breadcrumbJsonLd([
+    { label: "Home", path: `/${lang}/` },
+    { label: t.portfolio.title, path: `/${lang}/portfolio/` }
+  ])
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.portfolio.title}
+  description={t.portfolio.intro}
+  canonicalPath={`/${lang}/portfolio/`}
+  alternates={{ id: "/id/portfolio/", en: "/en/portfolio/" }}
+  jsonLd={jsonLd}
+>
+  <header class="page-header">
+    <div class="wrap">
+      <nav class="breadcrumbs" aria-label={t.common.menu}>
+        <ol>
+          <li><a href={`/${lang}/`}>{t.common.backHome}</a></li>
+          <li aria-current="page">{t.portfolio.title}</li>
+        </ol>
+      </nav>
+      <p class="kicker">{t.portfolio.kicker}</p>
+      <h1 class="page-title">{t.portfolio.title}</h1>
+      <p class="page-lead">{t.portfolio.intro}</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="sample-banner" style="margin-bottom: 1.5rem;">
+        <strong>{t.common.sampleBadge}</strong>
+        <span>{t.portfolio.demoNote}</span>
+      </p>
+
+      <div class="filter-row" role="group" aria-label={t.portfolio.filterLabel}>
+        <button class="filter-chip" type="button" data-project-chip data-value="" aria-pressed="true">
+          {t.portfolio.allCategories}
+        </button>
+        {categories.map((category) => (
+          <button
+            class="filter-chip"
+            type="button"
+            data-project-chip
+            data-value={category.key}
+            aria-pressed="false"
+          >
+            {category.label} ({category.count})
+          </button>
+        ))}
+      </div>
+
+      <div class="grid grid-cards" style="margin-top: 1.5rem;" data-project-grid>
+        {projects.map((project) => (
+          <ProjectCard project={project} lang={lang} />
+        ))}
+      </div>
+
+      <div class="explorer-empty is-hidden" data-project-empty>
+        <p>{t.portfolio.empty}</p>
+      </div>
+
+      <p class="eyebrow" style="margin-top: 1.5rem;">{t.portfolio.detailNote}</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const grid = document.querySelector<HTMLElement>("[data-project-grid]");
+
+  if (grid) {
+    const items = Array.from(grid.querySelectorAll<HTMLElement>("[data-category]"));
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-project-chip]"));
+    const empty = document.querySelector<HTMLElement>("[data-project-empty]");
+    const params = new URLSearchParams(window.location.search);
+    let active = params.get("category") ?? "";
+
+    if (!chips.some((chip) => chip.dataset.value === active)) active = "";
+
+    const apply = () => {
+      let visible = 0;
+      for (const item of items) {
+        const matches = !active || item.dataset.category === active;
+        item.classList.toggle("is-hidden", !matches);
+        if (matches) visible += 1;
+      }
+
+      for (const chip of chips) {
+        chip.setAttribute("aria-pressed", String((chip.dataset.value ?? "") === active));
+      }
+
+      empty?.classList.toggle("is-hidden", visible > 0);
+
+      const next = active ? `?category=${encodeURIComponent(active)}` : "";
+      window.history.replaceState(null, "", `${window.location.pathname}${next}`);
+    };
+
+    for (const chip of chips) {
+      chip.addEventListener("click", () => {
+        active = chip.dataset.value ?? "";
+        apply();
+      });
+    }
+
+    apply();
+  }
+</script>

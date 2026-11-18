@@ -1,0 +1,310 @@
+---
+import ArticleCard from "./ArticleCard.astro";
+import { categoryLabel } from "../data/categories";
+import type { Lang } from "../data/site";
+import type { Post } from "../utils/content";
+import { useTranslations } from "../utils/i18n";
+
+interface Props {
+  lang: Lang;
+  posts: Post[];
+  /** Endpoint returning [{ slug, text }] for full-text search. */
+  indexUrl: string;
+  perPage?: number;
+}
+
+const { lang, posts, indexUrl, perPage = 6 } = Astro.props;
+const t = useTranslations(lang);
+
+const categoryCounts = new Map<string, number>();
+for (const post of posts) {
+  categoryCounts.set(post.category, (categoryCounts.get(post.category) ?? 0) + 1);
+}
+
+const categoryOptions = [...categoryCounts.entries()]
+  .map(([key, count]) => ({ key, label: categoryLabel(key, lang), count }))
+  .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+---
+
+<section
+  class="explorer"
+  data-explorer
+  data-per-page={perPage}
+  data-index-url={indexUrl}
+  data-label-results={t.listing.results}
+  data-label-result-one={t.listing.resultsOne}
+  data-label-load-more={t.listing.loadMoreHint}
+  data-label-showing-all={t.listing.showingAll}
+>
+  <div class="explorer-toolbar">
+    <div class="search-field">
+      <label for="explorer-search">{t.listing.searchLabel}</label>
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m16.5 16.5 4 4" stroke-linecap="round" />
+      </svg>
+      <input
+        id="explorer-search"
+        class="search-input"
+        type="search"
+        autocomplete="off"
+        placeholder={t.listing.searchPlaceholder}
+        data-search-input
+        aria-describedby="explorer-search-note"
+      />
+      <button class="search-clear" type="button" data-search-clear hidden aria-label={t.listing.clearSearch}>
+        &times;
+      </button>
+    </div>
+
+    <div class="select-field">
+      <label for="explorer-sort">{t.listing.sortLabel}</label>
+      <select id="explorer-sort" class="select-input" data-sort>
+        <option value="newest">{t.listing.sortNewest}</option>
+        <option value="oldest">{t.listing.sortOldest}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filter-row" style="margin-top: 1rem;" role="group" aria-label={t.listing.categoryLabel}>
+    <button class="filter-chip" type="button" data-category-chip data-value="" aria-pressed="true">
+      {t.listing.allCategories}
+    </button>
+    {categoryOptions.map((option) => (
+      <button class="filter-chip" type="button" data-category-chip data-value={option.key} aria-pressed="false">
+        {option.label} ({option.count})
+      </button>
+    ))}
+  </div>
+
+  <div class="explorer-status">
+    <p data-count aria-live="polite" aria-atomic="true">
+      {t.listing.results.replace("{count}", String(posts.length))}
+    </p>
+    <button class="filter-chip" type="button" data-reset hidden>{t.common.resetFilters}</button>
+  </div>
+
+  <p id="explorer-search-note" class="eyebrow" style="margin-top: 0.5rem;">
+    {t.listing.bodySearchNote}
+  </p>
+
+  <ul class="article-list" data-list>
+    {posts.map((post) => (
+      <li
+        class="article-list-item"
+        data-item
+        data-slug={`${post.section}/${post.slug}`}
+        data-category={post.category}
+        data-tags={post.tags.join(" ").toLowerCase()}
+        data-date={post.publishDate.toISOString()}
+        data-search={[post.title, post.description, post.tags.join(" "), categoryLabel(post.category, lang)]
+          .join(" ")
+          .toLowerCase()}
+      >
+        <ArticleCard post={post} lang={lang} />
+      </li>
+    ))}
+  </ul>
+
+  <div class="explorer-empty is-hidden" data-empty>
+    <p>{t.listing.noResults}</p>
+    <p>{t.listing.noResultsHint}</p>
+  </div>
+
+  <div class="load-more">
+    <button class="btn" type="button" data-more hidden>{t.listing.loadMore}</button>
+    <p class="eyebrow" data-more-hint></p>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-explorer]");
+
+  if (root) {
+    const list = root.querySelector<HTMLElement>("[data-list]");
+    const input = root.querySelector<HTMLInputElement>("[data-search-input]");
+    const clearButton = root.querySelector<HTMLButtonElement>("[data-search-clear]");
+    const sortSelect = root.querySelector<HTMLSelectElement>("[data-sort]");
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-category-chip]"));
+    const countEl = root.querySelector<HTMLElement>("[data-count]");
+    const emptyEl = root.querySelector<HTMLElement>("[data-empty]");
+    const moreButton = root.querySelector<HTMLButtonElement>("[data-more]");
+    const moreHint = root.querySelector<HTMLElement>("[data-more-hint]");
+    const resetButton = root.querySelector<HTMLButtonElement>("[data-reset]");
+
+    if (list && input && countEl) {
+      const listEl: HTMLElement = list;
+      const inputEl: HTMLInputElement = input;
+      const countElRef: HTMLElement = countEl;
+      const rootEl: HTMLElement = root;
+      const items = Array.from(listEl.querySelectorAll<HTMLElement>("[data-item]"));
+      const perPage = Number(root.dataset.perPage ?? "6") || 6;
+      const labels = {
+        results: root.dataset.labelResults ?? "{count} articles",
+        one: root.dataset.labelResultOne ?? "1 article",
+        loadMore: root.dataset.labelLoadMore ?? "Showing {shown} of {total}",
+        all: root.dataset.labelShowingAll ?? "Showing all {total} articles"
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const validCategory = (value: string) => chips.some((chip) => chip.dataset.value === value);
+      const initialCategory = params.get("category") ?? "";
+
+      const state = {
+        q: params.get("q") ?? "",
+        category: validCategory(initialCategory) ? initialCategory : "",
+        tag: (params.get("tag") ?? "").toLowerCase(),
+        sort: (params.get("sort") === "oldest" ? "oldest" : "newest") as "newest" | "oldest",
+        shown: perPage
+      };
+
+      const bodyIndex = new Map<string, string>();
+      let indexStatus: "idle" | "loading" | "ready" | "failed" = "idle";
+
+      const fillTemplate = (template: string, values: Record<string, string | number>) =>
+        template.replace(/\{(\w+)\}/g, (match, key: string) =>
+          Object.prototype.hasOwnProperty.call(values, key) ? String(values[key]) : match
+        );
+
+      const sortedItems = () => {
+        const direction = state.sort === "oldest" ? 1 : -1;
+        return [...items].sort(
+          (a, b) => direction * (a.dataset.date ?? "").localeCompare(b.dataset.date ?? "")
+        );
+      };
+
+      const matches = (item: HTMLElement) => {
+        if (state.category && item.dataset.category !== state.category) return false;
+        if (state.tag) {
+          const tags = (item.dataset.tags ?? "").split(" ").filter(Boolean);
+          if (!tags.includes(state.tag)) return false;
+        }
+        const query = state.q.trim().toLowerCase();
+        if (!query) return true;
+        const haystack = [item.dataset.search ?? ""];
+        const body = bodyIndex.get(item.dataset.slug ?? "");
+        if (body) haystack.push(body);
+        return haystack.some((value) => value.includes(query));
+      };
+
+      const syncUrl = () => {
+        const next = new URLSearchParams();
+        if (state.q.trim()) next.set("q", state.q.trim());
+        if (state.category) next.set("category", state.category);
+        if (state.tag) next.set("tag", state.tag);
+        if (state.sort !== "newest") next.set("sort", state.sort);
+        const search = next.toString();
+        window.history.replaceState(null, "", `${window.location.pathname}${search ? `?${search}` : ""}`);
+      };
+
+      const apply = () => {
+        const ordered = sortedItems();
+        for (const item of ordered) listEl.appendChild(item);
+
+        const filtered = ordered.filter(matches);
+        const total = filtered.length;
+
+        for (const item of items) {
+          const position = filtered.indexOf(item);
+          item.classList.toggle("is-hidden", position === -1 || position >= state.shown);
+        }
+
+        countElRef.textContent =
+          total === 1 ? labels.one : fillTemplate(labels.results, { count: total });
+
+        emptyEl?.classList.toggle("is-hidden", total > 0);
+
+        if (moreButton) moreButton.hidden = state.shown >= total;
+
+        if (moreHint) {
+          moreHint.textContent =
+            state.shown < total
+              ? fillTemplate(labels.loadMore, { shown: Math.min(state.shown, total), total })
+              : fillTemplate(labels.all, { total });
+        }
+
+        for (const chip of chips) {
+          chip.setAttribute("aria-pressed", String((chip.dataset.value ?? "") === state.category));
+        }
+
+        if (clearButton) clearButton.hidden = state.q.length === 0;
+        if (resetButton) resetButton.hidden = !(state.q || state.category || state.tag);
+
+        syncUrl();
+      };
+
+      const ensureIndex = async () => {
+        const indexUrl = rootEl.dataset.indexUrl ?? "";
+        if (!indexUrl || indexStatus !== "idle") return;
+        indexStatus = "loading";
+        try {
+          const response = await fetch(indexUrl, { headers: { accept: "application/json" } });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = (await response.json()) as Array<{ slug: string; text: string }>;
+          for (const entry of data) bodyIndex.set(entry.slug, entry.text.toLowerCase());
+          indexStatus = "ready";
+          apply();
+        } catch {
+          indexStatus = "failed";
+        }
+      };
+
+      inputEl.value = state.q;
+      if (sortSelect) sortSelect.value = state.sort;
+
+      inputEl.addEventListener("input", () => {
+        state.q = inputEl.value;
+        state.shown = perPage;
+        apply();
+        if (state.q.trim().length >= 2) void ensureIndex();
+      });
+
+      inputEl.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && inputEl.value) {
+          state.q = "";
+          inputEl.value = "";
+          state.shown = perPage;
+          apply();
+        }
+      });
+
+      clearButton?.addEventListener("click", () => {
+        state.q = "";
+        inputEl.value = "";
+        state.shown = perPage;
+        apply();
+        inputEl.focus();
+      });
+
+      for (const chip of chips) {
+        chip.addEventListener("click", () => {
+          state.category = chip.dataset.value ?? "";
+          state.shown = perPage;
+          apply();
+        });
+      }
+
+      sortSelect?.addEventListener("change", () => {
+        state.sort = sortSelect.value === "oldest" ? "oldest" : "newest";
+        apply();
+      });
+
+      moreButton?.addEventListener("click", () => {
+        state.shown += perPage;
+        apply();
+      });
+
+      resetButton?.addEventListener("click", () => {
+        state.q = "";
+        state.category = "";
+        state.tag = "";
+        state.shown = perPage;
+        inputEl.value = "";
+        apply();
+      });
+
+      apply();
+      if (state.q.trim().length >= 2) void ensureIndex();
+    }
+  }
+</script>

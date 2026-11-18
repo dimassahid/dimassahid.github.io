@@ -1,0 +1,33 @@
+{
+  "name": "cyber-portfolio",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Bilingual (ID/EN) cybersecurity consultant portfolio and technical blog powered by Astro, Notion and Azure Translator.",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "sync:notion": "node scripts/sync-notion.mjs",
+    "sync:notion:check": "node scripts/sync-notion.mjs --check",
+    "images:notion": "node scripts/localize-notion-images.mjs",
+    "validate:content": "node scripts/validate-content.mjs",
+    "verify": "npm run validate:content && npm run check && npm run build"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "astro": "^5.18.2",
+    "dotenv": "^16.6.1",
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.9.3"
+  }
+}

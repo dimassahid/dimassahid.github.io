@@ -1,0 +1,148 @@
+---
+import type { Lang } from "../data/site";
+import { navigation, site } from "../data/site";
+import { useTranslations } from "../utils/i18n";
+
+interface Props {
+  lang: Lang;
+  /** Language-neutral path of the current page, e.g. "/notes/". */
+  currentPath: string;
+  /** Same page in the other language, when it exists. */
+  alternatePath: string;
+  alternateLangLabel: string;
+}
+
+const { lang, currentPath, alternatePath, alternateLangLabel } = Astro.props;
+const t = useTranslations(lang);
+
+function localized(path: string): string {
+  const clean = path.replace(/^\/+/, "").replace(/\/+$/, "");
+  return clean === "" ? `/${lang}/` : `/${lang}/${clean}/`;
+}
+
+function isActive(path: string): boolean {
+  if (path === "/") return currentPath === "/";
+  return currentPath === path || currentPath.startsWith(path);
+}
+
+const navItems = navigation.map((item) => ({
+  ...item,
+  href: localized(item.path),
+  active: isActive(item.path)
+}));
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href={`/${lang}/`} aria-label={`${site.name} - ${t.common.backHome}`}>
+      <span class="brand-mark brand-mark-photo" aria-hidden="true">
+        <img src="/images/logo-mark.png" alt="" width="300" height="402" loading="eager" decoding="async" />
+      </span>
+      <span class="brand-text">
+        {site.name}
+        <small>{site.role[lang]}</small>
+      </span>
+    </a>
+
+    <nav class="nav-primary" aria-label={t.common.mainNav}>
+      {navItems.map((item) => (
+        <a href={item.href} aria-current={item.active ? "page" : undefined}>
+          {item.label[lang]}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <a
+        class="icon-btn lang-toggle"
+        href={alternatePath}
+        hreflang={lang === "id" ? "en" : "id"}
+        aria-label={`${t.common.switchLanguage}: ${alternateLangLabel}`}
+        title={`${t.common.switchLanguage}: ${alternateLangLabel}`}
+      >
+        {lang === "id" ? "EN" : "ID"}
+      </a>
+      <button
+        type="button"
+        class="icon-btn theme-toggle"
+        data-theme-toggle
+        data-label-light={t.common.themeToLight}
+        data-label-dark={t.common.themeToDark}
+        aria-label={t.common.toggleTheme}
+        title={t.common.toggleTheme}
+      >
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5Z" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <details class="nav-mobile">
+      <summary class="icon-btn" aria-label={t.common.openMenu}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+        </svg>
+      </summary>
+      <nav class="nav-mobile-panel" aria-label={t.common.mainNav}>
+        {navItems.map((item) => (
+          <a href={item.href} aria-current={item.active ? "page" : undefined}>
+            {item.label[lang]}
+          </a>
+        ))}
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  const menus = document.querySelectorAll("details.nav-mobile");
+  for (const menu of menus) {
+    menu.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("a")) {
+        (menu as HTMLDetailsElement).open = false;
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") (menu as HTMLDetailsElement).open = false;
+    });
+  }
+
+  /* Theme toggle: keeps localStorage, aria-label and colour scheme in sync. */
+  const themeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]"));
+
+  const currentTheme = (): "light" | "dark" =>
+    document.documentElement.dataset.theme === "light" ? "light" : "dark";
+
+  const syncThemeButtons = () => {
+    const theme = currentTheme();
+    const next = theme === "dark" ? "light" : "dark";
+    for (const button of themeButtons) {
+      const label =
+        next === "light" ? button.dataset.labelLight ?? "Light" : button.dataset.labelDark ?? "Dark";
+      button.setAttribute("aria-label", label);
+      button.setAttribute("title", label);
+      button.setAttribute("aria-pressed", String(theme === "light"));
+    }
+  };
+
+  for (const button of themeButtons) {
+    button.addEventListener("click", () => {
+      const next = currentTheme() === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* storage is optional */
+      }
+      syncThemeButtons();
+      document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: next } }));
+    });
+  }
+
+  syncThemeButtons();
+</script>

@@ -1,0 +1,131 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { expertise, languages, philosophy, site, skillGroups, type Lang } from "../../data/site";
+import { useTranslations } from "../../utils/i18n";
+import { breadcrumbJsonLd } from "../../utils/seo";
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const alternates = { id: "/id/about/", en: "/en/about/" } as const;
+const jsonLd = [
+  breadcrumbJsonLd([
+    { label: "Home", path: `/${lang}/` },
+    { label: t.about.title, path: `/${lang}/about/` }
+  ])
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.about.title}
+  description={site.intro[lang]}
+  canonicalPath={`/${lang}/about/`}
+  alternates={alternates}
+  jsonLd={jsonLd}
+>
+  <header class="page-header">
+    <div class="wrap">
+      <nav class="breadcrumbs" aria-label={t.common.menu}>
+        <ol>
+          <li><a href={`/${lang}/`}>{t.common.backHome}</a></li>
+          <li aria-current="page">{t.about.title}</li>
+        </ol>
+      </nav>
+      <div class="page-header-split">
+        <div>
+          <p class="kicker">{t.about.kicker}</p>
+          <h1 class="page-title">{t.about.title}</h1>
+          <p class="page-lead">{site.intro[lang]}</p>
+          <div class="hero-meta">
+            <span class="badge badge-accent">{site.role[lang]}</span>
+            <span class="badge">{site.location}</span>
+            <span class="badge badge-dot">{site.availability[lang]}</span>
+          </div>
+        </div>
+        <figure class="about-portrait">
+          <img
+            src="/images/profile.jpg"
+            alt={`${site.name} - ${site.role[lang]}`}
+            width="900"
+            height="1205"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="article-layout">
+      <div class="article-main">
+        <section class="section-tight">
+          <h2 class="section-title">{t.about.backgroundTitle}</h2>
+          <div class="prose" style="margin-top: 1rem;">
+            {site.bio[lang].map((paragraph) => <p>{paragraph}</p>)}
+          </div>
+        </section>
+
+        <section class="section-tight">
+          <h2 class="section-title">{t.about.philosophyTitle}</h2>
+          <div class="prose" style="margin-top: 1rem;">
+            <ul>
+              {philosophy[lang].map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        </section>
+
+        <section class="section-tight">
+          <h2 class="section-title">{t.about.interestsTitle}</h2>
+          <div class="grid grid-cards" style="margin-top: 1.25rem;">
+            {expertise.map((item) => (
+              <article class="card">
+                <p class="eyebrow">{item.code}</p>
+                <h3 class="card-title">{item.title[lang]}</h3>
+                <p class="card-text">{item.description[lang]}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="section-tight">
+          <h2 class="section-title">{t.about.toolsTitle}</h2>
+          <div class="grid grid-cards" style="margin-top: 1.25rem;">
+            {skillGroups.map((group) => (
+              <article class="card">
+                <h3 class="card-title">{group.title[lang]}</h3>
+                <ul class="tag-list" style="margin-top: 0.75rem;">
+                  {group.items.map((item) => (
+                    <li><span class="tag">{item}</span></li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <p class="notice notice-warning" style="margin-top: 1rem;">{t.about.placeholderNote}</p>
+      </div>
+
+      <aside class="article-aside">
+        <div class="card">
+          <h2 class="card-title" style="font-size: 1.05rem;">{t.contact.title}</h2>
+          <p class="card-text">{t.about.contactText}</p>
+          <div class="stack" style="margin-top: 1rem;">
+            <a class="btn btn-primary btn-sm" href={`/${lang}/contact/`}>{t.home.contactLink}</a>
+            <a class="btn btn-sm" href={`mailto:${site.email}`}>{site.email}</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title" style="font-size: 1.05rem;">{t.about.availabilityLabel}</h2>
+          <p class="card-text">{site.availability[lang]}</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

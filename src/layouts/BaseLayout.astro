@@ -1,0 +1,132 @@
+---
+/**
+ * Base HTML shell: metadata, theme bootstrap, header/footer and skip link.
+ */
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import Navbar from "../components/Navbar.astro";
+import { site, languageMeta, type Lang } from "../data/site";
+import { useTranslations } from "../utils/i18n";
+import { absoluteUrl, formatPageTitle, ogImageUrl } from "../utils/seo";
+
+interface Props {
+  lang: Lang;
+  /** Page title without the site name. */
+  title?: string;
+  description?: string;
+  /** Language-neutral path of this page, e.g. "/writeups/". */
+  currentPath?: string;
+  /** Site-relative canonical path of this exact page. */
+  canonicalPath: string;
+  /** Paths of the same page per language, for hreflang. */
+  alternates?: Partial<Record<Lang, string>>;
+  image?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+  jsonLd?: Array<Record<string, unknown>>;
+}
+
+const {
+  lang,
+  title,
+  description = site.description[lang],
+  canonicalPath,
+  currentPath = canonicalPath.replace(/^\/(id|en)(?=\/|$)/, "") || "/",
+  alternates,
+  image,
+  type = "website",
+  noindex = false,
+  jsonLd = []
+} = Astro.props;
+
+const t = useTranslations(lang);
+const meta = languageMeta[lang];
+const fullTitle = formatPageTitle(title);
+const canonical = absoluteUrl(canonicalPath);
+const ogImage = ogImageUrl(image);
+const otherLang: Lang = lang === "id" ? "en" : "id";
+const alternatePath = alternates?.[otherLang] ?? `/${otherLang}${currentPath === "/" ? "/" : currentPath}`;
+const hasAlternates = Boolean(alternates);
+const structuredData = JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd);
+---
+
+<!doctype html>
+<html lang={meta.htmlLang} data-lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
+
+    {hasAlternates &&
+      Object.entries(alternates ?? {}).map(([altLang, path]) =>
+        path ? (
+          <link
+            rel="alternate"
+            hreflang={languageMeta[altLang as Lang].htmlLang}
+            href={absoluteUrl(path)}
+          />
+        ) : null
+      )}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={absoluteUrl(alternates?.en ?? alternates?.id ?? `/${lang}${currentPath === "/" ? "/" : currentPath}`)}
+    />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={`${site.name} - ${site.role[lang]}`} />
+    <meta property="og:locale" content={meta.ogLocale} />
+    <meta property="og:locale:alternate" content={languageMeta[otherLang].ogLocale} />
+    {type === "article" && <meta property="article:author" content={site.name} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="theme-color" content="#06090d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} - RSS`} href={`/${lang}/rss.xml`} />
+
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme");
+          const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+          const theme = stored === "light" || stored === "dark" ? stored : prefersLight ? "light" : "dark";
+          document.documentElement.dataset.theme = theme;
+        } catch {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
+
+    {structuredData !== "[]" && (
+      <script type="application/ld+json" set:html={structuredData} />
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{t.common.skipToContent}</a>
+    <Navbar lang={lang} currentPath={currentPath} alternatePath={alternatePath} alternateLangLabel={languageMeta[otherLang].label} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

@@ -1,0 +1,6 @@
+# Static Cloudflare Pages configuration.
+# `wrangler pages deploy dist` also works without this file, but it keeps the
+# project name and output directory explicit and prevents mistakes.
+name = "cyber-portfolio"
+compatibility_date = "2026-11-10"
+pages_build_output_dir = "./dist"
