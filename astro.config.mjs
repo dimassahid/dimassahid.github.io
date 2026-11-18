@@ -5,7 +5,9 @@ import { loadEnv } from "vite";
 // Only build-time/server-side values are read here; nothing is exposed to the client.
 const mode = process.env.NODE_ENV === "development" ? "development" : "production";
 const env = loadEnv(mode, process.cwd(), "");
-const siteUrl = (process.env.SITE_URL || env.SITE_URL || "https://your-site.pages.dev").replace(/\/+$/, "");
+// Default matches the production deploy target (GitHub Pages user site).
+// Set SITE_URL in .env (local) or in the workflow / host environment to override.
+const siteUrl = (process.env.SITE_URL || env.SITE_URL || "https://dimassahid.github.io").replace(/\/+$/, "");
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({

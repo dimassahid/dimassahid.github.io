@@ -1,6 +1,6 @@
 # Cyber Portfolio
 
-A bilingual (Indonesian / English) cybersecurity consultant portfolio and technical blog built with Astro 5. Content lives in Notion, is synced to Markdown, and missing translations are generated with Azure Translator behind a persistent, committed cache. The output is a fully static site designed for Cloudflare Pages.
+A bilingual (Indonesian / English) cybersecurity consultant portfolio and technical blog built with Astro 5. Content lives in Notion, is synced to Markdown, and missing translations are generated with Azure Translator behind a persistent, committed cache. The output is a fully static site deployed to GitHub Pages (`https://dimassahid.github.io/`) by GitHub Actions, with Cloudflare Pages kept as an alternative host.
 
 ## Features
 
@@ -13,7 +13,7 @@ A bilingual (Indonesian / English) cybersecurity consultant portfolio and techni
 - **Search and filtering** - a per-language JSON index with client-side search across title, description, tags and body, plus category and tag chips.
 - **SEO** - canonical URLs, per-language RSS, sitemap with `xhtml:link` alternates, Open Graph/Twitter cards, JSON-LD (Person, WebSite, TechArticle, BreadcrumbList), `robots.txt`.
 - **Theme** - dark/light with a no-flash inline bootstrap, `prefers-color-scheme` default and a persistent toggle.
-- **Security headers** - `public/_headers` ships CSP, HSTS, `X-Frame-Options`, `Referrer-Policy` and long-lived asset caching for Cloudflare Pages.
+- **Security headers** - `public/_headers` ships CSP, HSTS, `X-Frame-Options`, `Referrer-Policy` and long-lived asset caching for Cloudflare Pages (GitHub Pages ignores the file, see *Deploy*).
 
 ## Tech stack
 
@@ -24,7 +24,7 @@ A bilingual (Indonesian / English) cybersecurity consultant portfolio and techni
 | CMS | Notion API (`@notionhq/client` style REST calls, no SDK) |
 | Translation | Azure Translator v3 REST |
 | Styling | Hand-written CSS with custom properties (`src/styles/`) |
-| Deploy | Cloudflare Pages (`wrangler.toml`, `_headers`, `_redirects`) |
+| Deploy | GitHub Pages user site via `actions/deploy-pages` (`wrangler.toml`, `_headers`, `_redirects` kept for Cloudflare Pages) |
 
 ## Quick start
 
@@ -244,9 +244,61 @@ Every `YOUR NAME` / `example.com` value in `site.ts` and `projects.ts` is a plac
 | `npm run sync:notion:check` | Dry run of the sync (exit code 1 when changes are pending) |
 | `npm run verify` | `validate:content` + `check` + `build` |
 
-## Deploy to Cloudflare Pages
+## Deploy to GitHub Pages
 
-### Git integration (recommended)
+The site is published as the **user site** `https://dimassahid.github.io/` from the repository `dimassahid/dimassahid.github.io`. `.github/workflows/deploy.yml` builds on every push to `main` and publishes the `dist/` artifact with `actions/deploy-pages`; build output is never committed.
+
+### One-time repository setup
+
+1. GitHub -> **Settings -> Pages -> Build and deployment -> Source: GitHub Actions**.
+2. Check that `SITE_URL` matches the deployed origin. The workflow passes `SITE_URL=https://dimassahid.github.io` to `astro build`, and `astro.config.mjs` / `src/data/site.ts` default to the same origin. A wrong value silently breaks canonical tags, the sitemap, RSS and Open Graph URLs.
+3. Keep `dist/`, `.astro/`, `node_modules/` and `.env` out of git - `.gitignore` already covers them. `.env` holds `NOTION_TOKEN`, which must stay local.
+
+### Everyday deploy
+
+```bash
+npm run sync:notion     # only when content changed in Notion
+git add -A
+git commit -m "Update writeups"
+git push origin main    # triggers build + deploy, roughly 2-4 minutes
+```
+
+Re-run `npm run images:notion` after any `--force` sync: a forced sync rewrites image URLs back to expiring Notion signed links.
+
+### User site vs project page
+
+`dimassahid.github.io` is a user site served from the domain root, so **no `base` is set**. A project page (`username.github.io/repo/`) needs `base: "/repo"` in `astro.config.mjs` plus `import.meta.env.BASE_URL` prefixes on internal links - do not reuse this config unchanged for a project repository.
+
+### What GitHub Pages does not do
+
+- `public/_headers` and `public/_redirects` are Cloudflare-only; GitHub Pages ignores them, so **CSP, HSTS, `X-Frame-Options` and the asset cache rules are not applied**. Front the site with Cloudflare (or keep Cloudflare Pages, below) if those headers matter.
+- No server side Notion access: content must be committed before it appears.
+- `dist/404.html` is served for unknown paths, so `src/pages/404.astro` acts as the custom not-found page.
+- Bare language prefixes rely on Pages' own directory redirect (`/en` -> `/en/`); Cloudflare's `_redirects` rules are not used.
+
+Post-deploy checklist:
+
+- `https://dimassahid.github.io/en/` and `/id/` return 200 and show the default language redirect from `/`.
+- `https://dimassahid.github.io/sitemap.xml` lists `https://dimassahid.github.io/...` (proof that `SITE_URL` was correct).
+- `/rss.xml`, `/en/rss.xml`, `/en/search-index.json` return the right content types.
+- A writeup opens with its cover image loaded from `/images/...`, and a random path renders the custom 404.
+
+### Snapshot and revert
+
+`baseline-2026-11-18` tags the state right before the GitHub Pages switch (English-source library, localized images, no deploy workflow).
+
+```bash
+git tag                                                    # list snapshots
+git restore --source baseline-2026-11-18 -- .              # restore files into the working tree
+git switch -c rollback baseline-2026-11-18                 # or inspect that state on a branch
+
+git push origin baseline-2026-11-18                        # push the tag itself
+git push --force-with-lease origin baseline-2026-11-18:main # republish the snapshot as `main`
+```
+
+## Cloudflare Pages (alternative)
+
+### Git integration
 
 1. Push the repository to GitHub/GitLab.
 2. In Cloudflare Pages choose **Create application -> Pages -> Connect to Git**.

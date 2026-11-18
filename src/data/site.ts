@@ -31,10 +31,13 @@ export const languageMeta: Record<Lang, { label: string; short: string; htmlLang
   }
 };
 
-const FALLBACK_SITE_URL = "https://your-site.pages.dev";
+const FALLBACK_SITE_URL = "https://dimassahid.github.io";
 
-/** Canonical site URL. Set SITE_URL in .env / Cloudflare Pages env variables. */
-export const siteUrl = String(import.meta.env.SITE_URL || FALLBACK_SITE_URL).replace(/\/+$/, "");
+/**
+ * Canonical site URL. `SITE_URL` wins, then the `site` value Astro resolves from
+ * astro.config.mjs, then the production fallback (GitHub Pages user site).
+ */
+export const siteUrl = String(import.meta.env.SITE_URL || import.meta.env.SITE || FALLBACK_SITE_URL).replace(/\/+$/, "");
 
 export const site = {
   url: siteUrl,
