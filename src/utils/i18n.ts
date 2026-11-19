@@ -20,7 +20,7 @@ const en = {
     switchLanguage: "Switch language",
     readArticle: "Read article",
     viewAll: "View all",
-    backHome: "Back to home",
+    home: "Home",
     copy: "Copy",
     copyCode: "Copy code",
     copied: "Copied",
@@ -41,7 +41,6 @@ const en = {
     backToTop: "Back to top"
   },
   home: {
-    kicker: "Cybersecurity consultant / Security research",
     terminalTitle: "~/profile - zsh",
     terminalCommand: "whoami",
     terminalLines: [
@@ -53,27 +52,21 @@ const en = {
     ctaWork: "Explore my work",
     ctaArticles: "Read my articles",
     ctaContact: "Contact me",
-    aboutKicker: "Profile",
     aboutTitle: "Security work grounded in evidence",
     aboutLink: "More about me",
-    expertiseKicker: "Expertise",
     expertiseTitle: "Where I can help",
     expertiseIntro: "Focused security services, each scoped to produce evidence your team can act on.",
-    projectsKicker: "Selected work",
     projectsTitle: "Projects & experiments",
     projectsIntro: "Lab research, tooling, and workflow experiments. Demonstration entries are clearly labelled.",
     projectsLink: "View portfolio",
-    latestKicker: "Knowledge hub",
     latestTitle: "Latest articles",
     latestIntro: "Technical writeups, field notes, and practical lessons.",
     latestLink: "All articles",
-    contactKicker: "Contact",
     contactTitle: "Have a security topic to discuss?",
     contactText: "I am open to conversations about application security, security research, and technical collaboration.",
     contactLink: "Get in touch"
   },
   about: {
-    kicker: "Profile / 001",
     title: "About me",
     backgroundTitle: "Background",
     interestsTitle: "Security interests",
@@ -86,7 +79,6 @@ const en = {
     placeholderNote: "Placeholder content: replace your name, location, biography, and links in src/data/site.ts. Nothing here claims a certification, employer, or client engagement."
   },
   portfolio: {
-    kicker: "Selected work / 002",
     title: "Portfolio",
     intro: "Projects, tooling experiments, and professional work. Anything sensitive or client-specific stays private.",
     filterLabel: "Filter projects by category",
@@ -127,12 +119,10 @@ const en = {
     sampleNote: "Articles marked 'Sample content' ship with this template and describe illustrative scenarios. Replace them with your own reviewed work before publishing."
   },
   notes: {
-    kicker: "Field notes / 003",
     title: "Notes",
     intro: "Short technical notes, learning logs, and observations from security work. Articles appear in the language they were written in unless a translation exists."
   },
   writeups: {
-    kicker: "Technical research / 004",
     title: "Writeups",
     intro: "In-depth analysis with scope, methodology, evidence, impact, and remediation.",
     disclosureTitle: "Responsible disclosure",
@@ -160,7 +150,6 @@ const en = {
     publishedLabel: "Published"
   },
   contact: {
-    kicker: "Contact / 005",
     title: "Let's connect",
     intro: "Open to security assessments, focused research, and technical collaborations. The fastest route is email.",
     emailLabel: "Email",
@@ -210,7 +199,7 @@ const id: typeof en = {
     switchLanguage: "Ubah bahasa",
     readArticle: "Baca artikel",
     viewAll: "Lihat semua",
-    backHome: "Kembali ke beranda",
+    home: "Beranda",
     copy: "Salin",
     copyCode: "Salin kode",
     copied: "Tersalin",
@@ -231,7 +220,6 @@ const id: typeof en = {
     backToTop: "Kembali ke atas"
   },
   home: {
-    kicker: "Konsultan keamanan siber / Riset keamanan",
     terminalTitle: "~/profil - zsh",
     terminalCommand: "whoami",
     terminalLines: [
@@ -243,27 +231,21 @@ const id: typeof en = {
     ctaWork: "Lihat pekerjaan saya",
     ctaArticles: "Baca artikel saya",
     ctaContact: "Hubungi saya",
-    aboutKicker: "Profil",
     aboutTitle: "Pekerjaan keamanan yang berbasis bukti",
     aboutLink: "Selengkapnya tentang saya",
-    expertiseKicker: "Keahlian",
     expertiseTitle: "Area yang dapat saya bantu",
     expertiseIntro: "Layanan keamanan yang terfokus, masing-masing dirancang untuk menghasilkan bukti yang dapat ditindaklanjuti tim Anda.",
-    projectsKicker: "Karya pilihan",
     projectsTitle: "Proyek & eksperimen",
     projectsIntro: "Riset laboratorium, tooling, dan eksperimen alur kerja. Entri demonstrasi diberi label secara jelas.",
     projectsLink: "Lihat portofolio",
-    latestKicker: "Pusat pengetahuan",
     latestTitle: "Artikel terbaru",
     latestIntro: "Technical writeup, catatan lapangan, dan pelajaran praktis.",
     latestLink: "Semua artikel",
-    contactKicker: "Kontak",
     contactTitle: "Ada topik keamanan yang ingin didiskusikan?",
     contactText: "Saya terbuka untuk diskusi tentang keamanan aplikasi, riset keamanan, dan kolaborasi teknis.",
     contactLink: "Hubungi saya"
   },
   about: {
-    kicker: "Profil / 001",
     title: "Tentang saya",
     backgroundTitle: "Latar belakang",
     interestsTitle: "Minat keamanan",
@@ -276,7 +258,6 @@ const id: typeof en = {
     placeholderNote: "Konten placeholder: ganti nama, kota, biografi, dan tautan Anda di src/data/site.ts. Tidak ada sertifikasi, perusahaan, atau keterlibatan klien yang diklaim di sini."
   },
   portfolio: {
-    kicker: "Karya pilihan / 002",
     title: "Portofolio",
     intro: "Proyek, eksperimen tooling, dan pekerjaan profesional. Materi sensitif atau spesifik klien tetap privat.",
     filterLabel: "Filter proyek berdasarkan kategori",
@@ -317,12 +298,10 @@ const id: typeof en = {
     sampleNote: "Artikel bertanda 'Konten contoh' adalah bawaan template dan menggambarkan skenario ilustratif. Ganti dengan karya Anda sendiri yang sudah ditinjau sebelum publikasi."
   },
   notes: {
-    kicker: "Catatan lapangan / 003",
     title: "Catatan",
     intro: "Catatan teknis singkat, log pembelajaran, dan pengamatan dari pekerjaan keamanan. Artikel tampil dalam bahasa aslinya kecuali tersedia terjemahan."
   },
   writeups: {
-    kicker: "Riset teknis / 004",
     title: "Writeups",
     intro: "Analisis mendalam dengan ruang lingkup, metodologi, bukti, dampak, dan rekomendasi perbaikan.",
     disclosureTitle: "Pengungkapan yang bertanggung jawab",
@@ -350,7 +329,6 @@ const id: typeof en = {
     publishedLabel: "Diterbitkan"
   },
   contact: {
-    kicker: "Kontak / 005",
     title: "Mari terhubung",
     intro: "Terbuka untuk asesmen keamanan, riset terarah, dan kolaborasi teknis. Jalur tercepat adalah email.",
     emailLabel: "Email",

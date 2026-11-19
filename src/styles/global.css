@@ -216,8 +216,6 @@ main {
    Typography helpers
    ========================================================================== */
 
-.kicker { font-size: 0.85rem; color: var(--text-muted); }
-
 .section-title {
   font-size: clamp(1.5rem, 3.2vw, 2.1rem);
   margin-top: 0.6rem;
