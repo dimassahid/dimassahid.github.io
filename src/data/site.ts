@@ -43,7 +43,7 @@ export const site = {
   url: siteUrl,
   /** Display name. */
   name: "Dimas Sahid Abdullah",
-  /** Short text mark kept as a fallback; navbar and footer render /images/logo-mark.png. */
+  /** Short text mark kept as a fallback; navbar and footer render /images/logo-mark-sm.png. */
   initials: "Sahid",
   role: {
     id: "Konsultan Keamanan Siber",
@@ -58,10 +58,10 @@ export const site = {
     id: "Riset keamanan siber, technical writeup, dan security engineering.",
     en: "Cybersecurity Research, Technical Writeups, and Security Engineering."
   },
-  /** Short description used in meta tags, RSS and social cards. */
+  /** Short description used in meta tags and social cards. */
   description: {
     id: "Profesional keamanan siber yang membagikan riset, eksperimen teknis, wawasan application security, dan pengetahuan keamanan yang praktis.",
-    en: "An independent cybersecurity professional sharing research, technical experiments, application security insights, and practical security knowledge."
+    en: "Cybersecurity consultant sharing research, technical experiments, application security insights, and practical security knowledge."
   },
   /** Hero paragraph. */
   intro: {
@@ -76,7 +76,7 @@ export const site = {
       "Situs ini adalah knowledge hub pribadi: tempat saya menyimpan catatan teknis, menulis ulang asumsi yang salah, dan berbagi metode yang dapat direproduksi oleh praktisi lain."
     ],
     en: [
-      "I am an independent cybersecurity professional focused on web, API, and mobile application security testing. My work combines offensive testing, root-cause analysis, and remediation guidance that engineering teams can act on immediately.",
+      "I am a cybersecurity consultant focused on web, API, and mobile application security testing. My work combines offensive testing, root-cause analysis, and remediation guidance that engineering teams can act on immediately.",
       "Outside of assessment work, I build security tooling, study complicated authentication flows, and document Android reverse engineering workflows in authorized lab environments.",
       "This site is a personal knowledge hub: a place to keep technical notes, challenge assumptions, and share reproducible methods with other practitioners."
     ]
@@ -86,6 +86,11 @@ export const site = {
   availability: {
     id: "Terbuka untuk asesmen keamanan, riset terarah, dan kolaborasi teknis.",
     en: "Available for security assessments, focused research, and technical collaboration."
+  },
+  /** Compact variant used inside the hero badge, where space is tight. */
+  availabilityShort: {
+    id: "Terbuka untuk proyek keamanan",
+    en: "Open to security work"
   },
   /** Public contact address. Use an alias you are comfortable publishing. */
   email: "syahid354313@gmail.com",
@@ -99,6 +104,52 @@ export const site = {
   /** Optional: link to a downloadable CV (leave empty to hide). */
   resumeUrl: ""
 } as const;
+
+/** Lead summary used by the About page credentials section. */
+export const summary = {
+  id: "Empat tahun menguji aplikasi web, API, dan mobile — dari menemukan celah sampai memastikan perbaikannya benar-benar menutup risiko.",
+  en: "Four years breaking web, API, and mobile applications — then making sure the fixes actually close the risk."
+} as const;
+
+/**
+ * Professional experience. `startYear` drives the "N+ years" label, so the
+ * number stays accurate without editing copy every year.
+ */
+export const experience = {
+  startYear: 2022,
+  roles: [
+    {
+      period: { id: "2022 — sekarang", en: "2022 — present" },
+      title: { id: "Cybersecurity Consultant", en: "Cybersecurity Consultant" },
+      summary: {
+        id: "Pengujian keamanan aplikasi web, API, dan mobile, riset terarah, serta dokumentasi temuan yang bisa langsung dieksekusi.",
+        en: "Web, API, and mobile application security testing, focused research, and findings documented for immediate action."
+      }
+    }
+  ]
+} as const;
+
+/**
+ * Public credentials. Paste the public verification URL from your OffSec
+ * account into `verifyUrl` to enable the "verify credential" link; while it is
+ * empty the card simply omits the link (nothing is invented).
+ */
+export const credentials = [
+  {
+    key: "oscp-plus",
+    name: "OSCP+",
+    fullName: "OffSec Certified Professional Plus",
+    issuer: "OffSec",
+    issuedYear: 2022,
+    credentialId: "",
+    verifyUrl: ""
+  }
+] as const;
+
+/** Years of experience derived from `experience.startYear`. */
+export function yearsOfExperience(now: Date = new Date()): number {
+  return Math.max(1, now.getFullYear() - experience.startYear);
+}
 
 export const navigation = [
   { key: "home", path: "/", label: { id: "Beranda", en: "Home" } },

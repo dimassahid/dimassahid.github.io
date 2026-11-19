@@ -29,11 +29,11 @@ const en = {
     sampleBadge: "Sample content",
     sampleContentNote: "Demonstration article shipped with this template. The scenario, evidence, and results are illustrative, so replace them with your own reviewed work before publishing.",
     minRead: "min read",
+    yearsExperience: "{years}+ years experience",
     published: "Published",
     updated: "Updated",
     category: "Category",
     tags: "Tags",
-    rss: "RSS feed",
     external: "opens in a new tab",
     loading: "Loading",
     all: "All",
@@ -44,7 +44,7 @@ const en = {
     terminalTitle: "~/profile - zsh",
     terminalCommand: "whoami",
     terminalLines: [
-      "Independent cybersecurity consultant",
+      "Cybersecurity Consultant",
       "Focus: web, API, and mobile application security",
       "Currently documenting what I break in the lab"
     ],
@@ -76,7 +76,13 @@ const en = {
     contactTitle: "Let's work together",
     contactText: "If you are preparing an assessment, need a second pair of eyes on a design, or want to discuss a research idea, get in touch.",
     availabilityLabel: "Availability",
-    placeholderNote: "Placeholder content: replace your name, location, biography, and links in src/data/site.ts. Nothing here claims a certification, employer, or client engagement."
+    summaryLabel: "Summary",
+    focusLabel: "Core focus",
+    credentialsTitle: "Certifications & experience",
+    experienceTitle: "Experience",
+    issuedLabel: "Issued",
+    credentialIdLabel: "Credential ID",
+    verifyCredential: "Verify credential"
   },
   portfolio: {
     title: "Portfolio",
@@ -208,11 +214,11 @@ const id: typeof en = {
     sampleBadge: "Konten contoh",
     sampleContentNote: "Artikel demonstrasi bawaan template ini. Skenario, bukti, dan hasilnya bersifat ilustratif, jadi ganti dengan karya Anda yang sudah ditinjau sebelum publikasi.",
     minRead: "menit baca",
+    yearsExperience: "{years}+ tahun pengalaman",
     published: "Diterbitkan",
     updated: "Diperbarui",
     category: "Kategori",
     tags: "Tag",
-    rss: "Feed RSS",
     external: "terbuka di tab baru",
     loading: "Memuat",
     all: "Semua",
@@ -223,7 +229,7 @@ const id: typeof en = {
     terminalTitle: "~/profil - zsh",
     terminalCommand: "whoami",
     terminalLines: [
-      "Konsultan keamanan siber independen",
+      "Cybersecurity Consultant",
       "Fokus: keamanan aplikasi web, API, dan mobile",
       "Sedang mendokumentasikan apa yang saya uji di lab"
     ],
@@ -255,7 +261,13 @@ const id: typeof en = {
     contactTitle: "Mari bekerja sama",
     contactText: "Jika Anda sedang menyiapkan asesmen, membutuhkan pendapat kedua atas sebuah desain, atau ingin mendiskusikan ide riset, silakan hubungi saya.",
     availabilityLabel: "Ketersediaan",
-    placeholderNote: "Konten placeholder: ganti nama, kota, biografi, dan tautan Anda di src/data/site.ts. Tidak ada sertifikasi, perusahaan, atau keterlibatan klien yang diklaim di sini."
+    summaryLabel: "Ringkasan",
+    focusLabel: "Fokus utama",
+    credentialsTitle: "Sertifikasi & pengalaman",
+    experienceTitle: "Pengalaman",
+    issuedLabel: "Diterbitkan",
+    credentialIdLabel: "ID kredensial",
+    verifyCredential: "Verifikasi kredensial"
   },
   portfolio: {
     title: "Portofolio",

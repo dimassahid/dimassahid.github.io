@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { expertise, languages, philosophy, site, skillGroups, type Lang } from "../../data/site";
+import { credentials, experience, expertise, languages, philosophy, site, skillGroups, summary, yearsOfExperience, type Lang } from "../../data/site";
 import { useTranslations } from "../../utils/i18n";
 import { breadcrumbJsonLd } from "../../utils/seo";
 
@@ -10,6 +10,7 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const t = useTranslations(lang);
+const years = yearsOfExperience();
 const alternates = { id: "/id/about/", en: "/en/about/" } as const;
 const jsonLd = [
   breadcrumbJsonLd([
@@ -62,6 +63,72 @@ const jsonLd = [
   <div class="wrap">
     <div class="article-layout">
       <div class="article-main">
+        <section class="section-tight" id="credentials">
+          <h2 class="section-title">{t.about.credentialsTitle}</h2>
+
+          <div class="summary-card">
+            <p class="eyebrow">{t.about.summaryLabel}</p>
+            <p class="summary-text">{summary[lang]}</p>
+            <ul class="summary-stats">
+              <li class="summary-stat">
+                <strong>{years}+</strong>
+                <span>{t.about.experienceTitle}</span>
+              </li>
+              <li class="summary-stat">
+                <strong>OSCP+</strong>
+                <span>OffSec</span>
+              </li>
+              <li class="summary-stat summary-stat-text">
+                <strong>WEB · API · MOBILE</strong>
+                <span>{t.about.focusLabel}</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="credential-layout">
+            {credentials.map((credential) => (
+              <article class="credential-card">
+                <p class="credential-mark" aria-hidden="true">{credential.name}</p>
+                <div class="credential-body">
+                  <p class="eyebrow">{credential.issuer} · {t.about.issuedLabel} {credential.issuedYear}</p>
+                  <h3 class="credential-name">{credential.fullName}</h3>
+                  <dl class="credential-meta">
+                    <div>
+                      <dt>{t.about.issuedLabel}</dt>
+                      <dd>{credential.issuedYear}</dd>
+                    </div>
+                    {credential.credentialId && (
+                      <div>
+                        <dt>{t.about.credentialIdLabel}</dt>
+                        <dd>{credential.credentialId}</dd>
+                      </div>
+                    )}
+                  </dl>
+                  {credential.verifyUrl && (
+                    <a class="btn btn-sm" href={credential.verifyUrl} target="_blank" rel="noopener noreferrer">
+                      {t.about.verifyCredential} <span aria-hidden="true">↗</span>
+                      <span class="visually-hidden">({t.common.external})</span>
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+
+            <div class="timeline-wrap">
+              <h3 class="timeline-title">{t.about.experienceTitle}</h3>
+              <ol class="timeline">
+                {experience.roles.map((role) => (
+                  <li class="timeline-item">
+                    <p class="timeline-period">{role.period[lang]}</p>
+                    <h4 class="timeline-role">{role.title[lang]}</h4>
+                    <p class="timeline-text">{role.summary[lang]}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+
         <section class="section-tight">
           <h2 class="section-title">{t.about.backgroundTitle}</h2>
           <div class="prose" style="margin-top: 1rem;">
@@ -106,8 +173,6 @@ const jsonLd = [
             ))}
           </div>
         </section>
-
-        <p class="notice notice-warning" style="margin-top: 1rem;">{t.about.placeholderNote}</p>
       </div>
 
       <aside class="article-aside">

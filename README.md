@@ -11,7 +11,7 @@ A bilingual (Indonesian / English) cybersecurity consultant portfolio and techni
 - **Content validation** - `npm run validate:content` checks frontmatter, language/file pairing, categories, duplicate translations, ethics notes on sample writeups and internal links.
 - **Reading experience** - sticky table of contents, code blocks with copy buttons, reading time, related posts, previous/next navigation, sample-content banner.
 - **Search and filtering** - a per-language JSON index with client-side search across title, description, tags and body, plus category and tag chips.
-- **SEO** - canonical URLs, per-language RSS, sitemap with `xhtml:link` alternates, Open Graph/Twitter cards, JSON-LD (Person, WebSite, TechArticle, BreadcrumbList), `robots.txt`.
+- **SEO** - canonical URLs, sitemap with `xhtml:link` alternates, Open Graph/Twitter cards, JSON-LD (Person, WebSite, TechArticle, BreadcrumbList), `robots.txt`.
 - **Theme** - dark/light with a no-flash inline bootstrap, `prefers-color-scheme` default and a persistent toggle.
 - **Security headers** - `public/_headers` ships CSP, HSTS, `X-Frame-Options`, `Referrer-Policy` and long-lived asset caching for Cloudflare Pages (GitHub Pages ignores the file, see *Deploy*).
 
@@ -51,7 +51,7 @@ src/
     writeups/        Technical writeups, one file per language
     notes/           Shorter notes, one file per language
   data/
-    site.ts          Name, tagline, bio, navigation, contact, skills
+    site.ts          Name, tagline, bio, credentials, experience, navigation, contact, skills
     projects.ts      Portfolio projects
     categories.ts    Category keys and localized labels
     translation-cache/  Committed translation memory + daily/monthly usage
@@ -59,8 +59,8 @@ src/
   pages/
     index.astro      Redirects to the default language
     [lang]/          home, about, portfolio, writeups, notes, contact
-    id/, en/         rss.xml.ts and search-index.json.ts (static per-language endpoints)
-    sitemap.xml.ts, robots.txt.ts, rss.xml.ts (root feed), 404.astro
+    id/, en/         search-index.json.ts (static per-language endpoints)
+    sitemap.xml.ts, robots.txt.ts, 404.astro
   styles/            theme.css (tokens) and global.css (components)
   utils/             content queries, i18n dictionaries, SEO helpers, reading time
 scripts/
@@ -256,7 +256,7 @@ The site is published as the **user site** `https://dimassahid.github.io/` from 
 ### One-time repository setup
 
 1. GitHub -> **Settings -> Pages -> Build and deployment -> Source: GitHub Actions**.
-2. Check that `SITE_URL` matches the deployed origin. The workflow passes `SITE_URL=https://dimassahid.github.io` to `astro build`, and `astro.config.mjs` / `src/data/site.ts` default to the same origin. A wrong value silently breaks canonical tags, the sitemap, RSS and Open Graph URLs.
+2. Check that `SITE_URL` matches the deployed origin. The workflow passes `SITE_URL=https://dimassahid.github.io` to `astro build`, and `astro.config.mjs` / `src/data/site.ts` default to the same origin. A wrong value silently breaks canonical tags, the sitemap and Open Graph URLs.
 3. Keep `dist/`, `.astro/`, `node_modules/` and `.env` out of git - `.gitignore` already covers them. `.env` holds `NOTION_TOKEN`, which must stay local.
 4. Make sure git can authenticate non-interactively, otherwise `git push` blocks on a username/password prompt and no deploy starts. Either sign in once with the GitHub CLI (`gh auth login --web`, then `gh auth setup-git`) or store a PAT with `Contents: read and write` (`git config --global credential.helper store`, then push once and paste the token as the password). Verify with `git ls-remote origin main` before relying on it.
 
@@ -286,7 +286,7 @@ Post-deploy checklist:
 
 - `https://dimassahid.github.io/en/` and `/id/` return 200 and show the default language redirect from `/`.
 - `https://dimassahid.github.io/sitemap.xml` lists `https://dimassahid.github.io/...` (proof that `SITE_URL` was correct).
-- `/rss.xml`, `/en/rss.xml`, `/en/search-index.json` return the right content types.
+- `/en/search-index.json` returns JSON and `/sitemap.xml` is valid XML.
 - A writeup opens with its cover image loaded from `/images/...`, and a random path renders the custom 404.
 
 ### Snapshot and revert
@@ -325,7 +325,7 @@ npx wrangler pages deploy dist --project-name cyber-portfolio
 Post-deploy checklist:
 
 - `https://your-domain/sitemap.xml` lists both languages.
-- `https://your-domain/id/rss.xml` and `/en/rss.xml` return XML.
+- Search index endpoints (`/id/search-index.json`, `/en/search-index.json`) return JSON.
 - `/robots.txt` points to the sitemap.
 - Security headers are present (CSP, HSTS, `X-Frame-Options`).
 - `hreflang` alternates only appear for articles that exist in both languages.
@@ -336,7 +336,7 @@ Post-deploy checklist:
 - JSON-LD: `Person` + `WebSite` on the homepage, `TechArticle` on articles, `BreadcrumbList` on listing and detail pages.
 - `sitemap.xml` emits `lastmod` from `updatedDate`/`publishDate` and `xhtml:link` alternates for translated pairs.
 - `/[lang]/search-index.json` powers the client-side search; it strips Markdown and joins title, description, tags and body.
-- Feeds and search indexes are static endpoints (`src/pages/id/…`, `src/pages/en/…`) built from `src/utils/feeds.ts` and `src/utils/search-index.ts`. A `[lang]/rss.xml.ts` file would be served at `/en/rss.xml/` under `trailingSlash: "always"`, which breaks the `/en/rss.xml` links and the client-side fetch, so the per-language static routes keep the canonical paths in both `astro dev` and the build.
+- Search indexes are static per-language endpoints (`src/pages/id/search-index.json.ts`, `src/pages/en/search-index.json.ts`) built from `src/utils/search-index.ts`.
 
 ## Troubleshooting
 

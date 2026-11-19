@@ -21,7 +21,6 @@
     "verify": "npm run validate:content && npm run check && npm run build"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.19",
     "astro": "^5.18.2",
     "dotenv": "^16.6.1",
     "gray-matter": "^4.0.3"

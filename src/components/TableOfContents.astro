@@ -23,31 +23,48 @@ for (const heading of items) {
 {
   items.length > 1 && (
     <nav class="toc" aria-labelledby="toc-title" data-toc>
-      <h2 class="toc-title" id="toc-title">
-        {title}
-      </h2>
-      <ol>
-        {groups.map((group) => (
-          <li>
-            <a href={`#${group.heading.slug}`}>{group.heading.text}</a>
-            {group.children.length > 0 && (
-              <ol>
-                {group.children.map((child) => (
-                  <li>
-                    <a href={`#${child.slug}`}>{child.text}</a>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </li>
-        ))}
-      </ol>
+      <details class="toc-details" data-toc-details open>
+        <summary class="toc-title" id="toc-title">
+          {title}
+        </summary>
+        <ol>
+          {groups.map((group) => (
+            <li>
+              <a href={`#${group.heading.slug}`}>{group.heading.text}</a>
+              {group.children.length > 0 && (
+                <ol>
+                  {group.children.map((child) => (
+                    <li>
+                      <a href={`#${child.slug}`}>{child.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </li>
+          ))}
+        </ol>
+      </details>
     </nav>
   )
 }
 
 <script>
   const toc = document.querySelector<HTMLElement>("[data-toc]");
+  const tocDetails = document.querySelector<HTMLDetailsElement>("[data-toc-details]");
+  const compactToc = window.matchMedia("(max-width: 1019px)");
+
+  // On phones and tablets the TOC sits above the article, so start it collapsed.
+  if (tocDetails && compactToc.matches) {
+    tocDetails.open = false;
+  }
+
+  // Close the panel after jumping so the heading is not pushed off screen.
+  tocDetails?.addEventListener("click", (event) => {
+    if (compactToc.matches && (event.target as HTMLElement).closest("a")) {
+      tocDetails.open = false;
+    }
+  });
+
   const links = toc ? Array.from(toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) : [];
 
   if (toc && links.length > 0) {

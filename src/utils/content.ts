@@ -106,7 +106,7 @@ export async function getPosts(section: Section, lang: Lang): Promise<Post[]> {
   return posts.sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime());
 }
 
-/** Everything across both sections, newest first (used by the homepage and RSS). */
+/** Everything across both sections, newest first (used by the homepage). */
 export async function getLatestPosts(lang: Lang, limit?: number): Promise<Post[]> {
   const all = (await Promise.all(sections.map((section) => getPosts(section, lang)))).flat();
   const sorted = all.sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime());

@@ -1,4 +1,4 @@
-import { languageMeta, site, siteUrl, type Lang } from "../data/site";
+import { credentials, languageMeta, site, siteUrl, type Lang } from "../data/site";
 
 /** Absolute URL for any site-relative path. */
 export function absoluteUrl(path = "/"): string {
@@ -46,7 +46,15 @@ export function personJsonLd() {
     url: `${siteUrl}/`,
     email: site.email,
     description: site.description.en,
-    sameAs: site.socials.map((social) => social.url)
+    sameAs: site.socials.map((social) => social.url),
+    hasCredential: credentials.map((credential) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: credential.fullName,
+      credentialCategory: "certification",
+      ...(credential.credentialId ? { identifier: credential.credentialId } : {}),
+      ...(credential.verifyUrl ? { url: credential.verifyUrl } : {}),
+      recognizedBy: { "@type": "Organization", name: credential.issuer }
+    }))
   };
 }
 

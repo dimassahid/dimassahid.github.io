@@ -3,7 +3,7 @@ import ArticleCard from "../../components/ArticleCard.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getProjects } from "../../data/projects";
-import { expertise, languages, site, type Lang } from "../../data/site";
+import { expertise, languages, site, yearsOfExperience, type Lang } from "../../data/site";
 import { getLatestPosts } from "../../utils/content";
 import { useTranslations } from "../../utils/i18n";
 import { personJsonLd, websiteJsonLd } from "../../utils/seo";
@@ -14,6 +14,8 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const t = useTranslations(lang);
+const years = yearsOfExperience();
+const yearsLabel = t.common.yearsExperience.replace("{years}", String(years));
 const latest = await getLatestPosts(lang, 3);
 const projects = getProjects().slice(0, 3);
 const bio = site.bio[lang];
@@ -35,8 +37,11 @@ const alternates = { id: "/id/", en: "/en/" } as const;
 
         <div class="hero-meta">
           <span class="badge badge-accent">{site.role[lang]}</span>
-          <span class="badge">{site.location}</span>
-          <span class="badge badge-dot">{site.availability[lang]}</span>
+          <a class="badge badge-credential" href={`/${lang}/about/#credentials`}>
+            OSCP+ <span aria-hidden="true">→</span>
+          </a>
+          <span class="badge">{yearsLabel}</span>
+          <span class="badge badge-dot">{site.availabilityShort[lang]}</span>
         </div>
 
         <div class="hero-actions btn-row">
