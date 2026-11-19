@@ -140,9 +140,9 @@ export const credentials = [
     name: "OSCP+",
     fullName: "OffSec Certified Professional Plus",
     issuer: "OffSec",
-    issuedYear: 2022,
-    credentialId: "",
-    verifyUrl: ""
+    issuedYear: 2025,
+    credentialId: "57170224",
+    verifyUrl: "https://credentials.offsec.com/60860266-cf8c-4ad0-b47e-7fbf74f76685#acc.0bG6Iasg"
   }
 ] as const;
 
