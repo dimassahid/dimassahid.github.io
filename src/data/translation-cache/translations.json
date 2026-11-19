@@ -1,4 +1,565 @@
 {
   "version": 1,
-  "entries": {}
+  "entries": {
+    "87229d8e735629cb4b748ed6455da1c230f79581479640fe1dfadc96b9f2ee9a": {
+      "text": "Halo dunia",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:02:41.223Z"
+    },
+    "50e52dc73b5c9e662433c1ada8f8b99b35a938e5c8cb91e5567f67585e3c558f": {
+      "text": "Mengatur ulang",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:36.310Z"
+    },
+    "039e699edc55c6ecd251e3317f0b2d2c5ff7884839d86ab8d624d76a5bbd0d87": {
+      "text": "Enumerasi Port 88 - Kerberos. Kita melihat bahwa port 88 terbuka, jadi mari kita lakukan enumerasi pada nama pengguna AD menggunakan kebrute. Kita juga melakukan enumerasi otomatis menggunakan enum4linux.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:36.310Z"
+    },
+    "ca6c83dcaa95e394c498b2a39b57eab730f684c59575bb171cf4ef4383f378e6": {
+      "text": "Enum",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "c1bc87ff8f8212291a75ae110e27eabd6b2ccd2a980a7dd7ae13c37b8fa704cd": {
+      "text": "Port 88 - Kerberos",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "e450ab665fd78efe2b823707dc90e69dce53467957ffb6fd71ba7f8231390d07": {
+      "text": "Kita melihat bahwa port 88 terbuka, jadi mari kita lakukan enumerasi pada nama pengguna pengguna AD menggunakan kebrute.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "dc518a82c72673f0aa5db43d210c59ec8d6a6dff4e0e8c6bdf3f3d6db8b30606": {
+      "text": "![[[[T0]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "c7dcd09caf0c8b29a88012e31d6ea1b6f9d95237733e1a62724eef89369e219a": {
+      "text": "Kami juga melakukan enumerasi otomatis menggunakan enum4linux.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "64d783e52e9832509153ab735cd19294f621de54bb096b332fce33233e63c942": {
+      "text": "Dari enum4linux, kami menemukan bahwa kami mendapatkan pengguna guest dan kami dapat mengakses folder bersama menggunakan nama pengguna tersebut, jadi saya ingin memastikannya menggunakan smbmap.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "b5d8171e35cbc63076132776d1da1bd57c838d946407caa685efde01c69c675a": {
+      "text": "![[[[T1]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "6a64bcccb19555805f6040a741d75873248e31c0b0453497f542afb72001b5d7": {
+      "text": "![[[[T2]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "dc520c653aa07c4013452b5e6376a2b3c7e685968d9da8e3e091dcb9da8637ae": {
+      "text": "Port 139 & 445 - SMB",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "e303e7eba1ebfaf842814373a92fae0aba52ce0b7e8aa811be3d2df594e4d472": {
+      "text": "Lalu mari kita periksa isi folder bersama Data.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "3b138b214173a7d04bd873552321666bca8820bb67aebe5cc8862889fa29b137": {
+      "text": "![[[[T3]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "1fde53fabbefe2075e144372b945e1c82d53eddf29e5b520eae6a1ccba87a87f": {
+      "text": "Nama filenya terus berubah, jadi mari kita ambil semuanya dengan cepat.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "0feba597a05943a6c16db68f5ef4a88c530290a51b2265cb0296c2334ae61f18": {
+      "text": "![[[[T4]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "e626daacc29fb8414fc9c31ae3a498c44e5ea8f10286f7c3b103c88c9ff78d58": {
+      "text": "Sekarang periksa file satu per satu untuk melihat apa yang bisa kita dapatkan dari file-file tersebut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "5bfe294545701467ddd078c0beba1c8f1d04c45c946390eb7c077baff661a33e": {
+      "text": "Pada berkas ve3ojpb3.njv.pdf kami menemukan kemungkinan nama pengguna dan kata sandi.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "08760b8f7d0885c2ee19adfc7343d52800aff4461a30d1cb052bd309efc175b4": {
+      "text": "![[[[T5]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "ce3ffca2fdcd9331dbdf2b94240b0cbaea9866b9fb8064a0956fc815cdf2f6ab": {
+      "text": "Kami menemukan kemungkinan kata sandi yang sama pada file ia3s5y0v.ehj.txt",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "03e2422ec8836f6a70c4a4f12033b3d88409178e3ac3227d75175fa94d52ee04": {
+      "text": "![[[[T6]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "98cae04ef7571f94bd6045c77d70c9e5d612c3bbbe8923fe70a02a2b23e864c1": {
+      "text": "sekarang mari kita semprotkan nama pengguna menggunakan impacket lookupsid",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "ed6d6a8dd75cc727b8865bb6aac0100369d184c6bc39ae07d151e2f5ebf8a763": {
+      "text": "Kami menemukan banyak nama pengguna yang dapat kami coba, tetapi seperti pada enumerasi sebelumnya, kami mendapatkan nama pengguna lily oneill, jadi mari kita coba dulu, karena kami juga mendapatkan nama pengguna tersebut di lookupsid.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "6965e12cbbe4a44c4c431061568e5df57f300d9dba38ddc21831c28c71009d27": {
+      "text": "![[[[T7]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "a239207fdd286d262faf5072e8ed07da571bae36c766fcb90a48e8ec39247d20": {
+      "text": "Kami menggunakan netexec untuk mencoba apakah pengguna memiliki akses ke beberapa server antarmuka seperti winrm, rdp, smb, dll. (LILY_ONEILL:Resetme123!)",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "2334d19fdc747f790f32d67b52fc5941bad97eb51be639661abe7138f935f616": {
+      "text": "![[[[T8]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "407449b3d64ddb651fe70ad2941530f5372313443e6e55855234994c67d67fae": {
+      "text": "Lihat, kami hanya memiliki akses SMB menggunakan kredensial, lalu saat kami mengakses kembali folder bersama, kami hanya mendapatkan file yang sama di dalam folder tersebut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "3a19aafafb6539b7797ca92d2440146b0a862322dd12c90b50de6710f3d30d47": {
+      "text": "![[[[T9]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "aee7cf25abd87dba152c4d5484ddea51c3cd45dd00cbea360ffc4477a0e66b93": {
+      "text": "Pada langkah sebelumnya kita telah mendapatkan sejumlah nama pengguna, jadi mari kita coba menggunakannya untuk serangan password spraying guna mendapatkan lebih banyak petunjuk tentang layanan tersebut. Kita mendapatkan banyak akses yang hanya tersedia di SMB dengan akun yang berbeda, tetapi saya tidak melihatnya di folder share yang berbeda, jadi mari kita beralih ke skenario lain.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "61bc9b71e8893fa53c3a1e80635f205698268f5cd503ddcbef5aa694b4c1c82e": {
+      "text": "![[[[T10]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "cfabae773f623426a02380789843f6cd630595addb0e2066448f6a529ad0460e": {
+      "text": "Karena kita memiliki kredensial yang valid, mari kita coba melakukan serangan AESREPRoasting, mungkin kita bisa mendapatkan sesuatu yang menarik.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "dd9e319aac29abf1e8856d86abdfab7c33f7ac6709ddf17e863ed1a011b552f1": {
+      "text": "![[[[T11]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "8f6b96039568e7ed12dab9e35ffc1c0d0cb95677959162efdff4d7c1f4838055": {
+      "text": "jadi mari kita coba memecahkannya menggunakan hashcat,",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "e3e554da433c8336b67efcdaab2ee413bbf9af10d29765b96e3c548221eab20d": {
+      "text": "![[[[T12]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "f035c08000eee2fefaf1b2a2d8f448369d31444d222258cc4434bb1662e0e7c6": {
+      "text": "Yey, kita punya pengguna baru, jadi mari kita periksa lagi akses apa yang dimiliki pengguna ini. ([[[T13]]]), yey, kita punya akses ke server melalui RDP atau WMI",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "5cc74cac002ff738ae1fddc9d30207a229b4564bbb133a4e19a01a18479c1dd3": {
+      "text": "![[[[T14]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "a75f5dfdcc8c1badc27e84ebb5905f1d7d616edfda40f6bf9e19c3db728f48f2": {
+      "text": "Jadi, mari kita masuk ke server melalui RDP dan menjalankan Bloodhound untuk melakukan enumerasi di dalamnya.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "bee7e32aac6e9ef1b6c67ed7c4839e36f3ee844807202dd8a65cdc9ddd87584a": {
+      "text": "![[[[T15]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "8a4df9117f15b1e6b5318a16552157f293ce8517e49a69b1f88c23131da3c79c": {
+      "text": "Kami melihat bahwa kami tidak dapat menjalankan Bloodhound dari dalam mesin, jadi kami mencoba menjalankannya dari luar.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "e270d2c726ea51f8f1e257f5d847cf6b6750ceedfd5f233805c8e38e8c929c45": {
+      "text": "![[[[T16]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "e818a735a3ca5921afefd8cac16880dd5b3b7650ea0450abe38410e39a36cbf2": {
+      "text": "Output dari Bloodhound: kita akan mendapatkan file seperti berikut ini.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "caf89f0ab1d0da3d78885e8ca6340a3be1610d186f499a10de6e8ceac5a35d1c": {
+      "text": "![[[[T17]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "825b8d6f9587491c10d3c2215d0f5c55393028ef83f2457077ecb7fa208fd20d": {
+      "text": "Kemudian jalankan Bloodhound dan impor file zip untuk mendapatkan visualisasi grafis seperti berikut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:44.294Z"
+    },
+    "57731477c266ad12e494b3bc12094bc437cd36fdbe504cedf409e760fbb7f2e4": {
+      "text": "Direktori Agresif",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:45.996Z"
+    },
+    "6a402f60ef3eebd676379eda58ed3d8352a419d91fda7d861329a64e146d1d51": {
+      "text": "Enum Enum4Linux: Port 88 - Kerberos kita melihat port kerberos terbuka jadi mari kita coba untuk menghitung nama pengguna menggunakan kerbrute Setelah penghitungan akun pengguna selesai, kita dapat",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:45.996Z"
+    },
+    "83d277885786327f489a01abdcc4fc452580da0b7f5de823677787bf8a8fc705": {
+      "text": "Enum4Linux:",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "9354bcb00b1ba0b0945d188b894a52140f6c800f1a1f6a622be4dc21fa2fec04": {
+      "text": "Kita melihat port Kerberos terbuka, jadi mari kita coba untuk melakukan enumerasi nama pengguna menggunakan Kerbrute.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "8f99fd9fce0ad81af9e08cb7fa79eaf5750d80f7799aa007476a0ee125781047": {
+      "text": "Setelah enumerasi akun pengguna selesai, kita dapat mencoba menyalahgunakan fitur dalam Kerberos dengan metode serangan yang disebut ASREPRoasting. ASReproasting terjadi ketika akun pengguna memiliki hak istimewa \"Tidak memerlukan Pra-Autentikasi\". Ini berarti bahwa akun tersebut tidak",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "99bf59a4ce5493132d34fcd702f6659ffc47be80fdfce37cea659d71d0d0917e": {
+      "text": "Anda perlu memberikan identitas yang valid sebelum meminta Tiket Kerberos pada akun pengguna yang ditentukan.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "edcd584cf434a8fd83dad54f1c089da092ea3713b7d9c15b621c10f4371b5b6e": {
+      "text": "Sekarang, kita akan menggunakan salah satu alat impacket yang disebut [[[T2]]] yang memungkinkan kita untuk menanyakan akun ASReproastable dari Pusat Distribusi Kunci. Perintah yang akan kita gunakan adalah:",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "d57097c259431413c63b25e15e255dceaab6669060effbd4902b8c3c69c64298": {
+      "text": "Kami hanya mendapatkan hash dari pengguna **svc-admin**, Setelah mendapatkan hash Kerberos, kemudian setelah mengidentifikasi hash tersebut, kami menemukan bahwa hash kami adalah [[[T4]]] dari wiki hashcat [[[[T5]]][[[T6]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "06eb6b0ed144c2291b35ed4688cd51101b8a68cb9a26bfa610ae66c38a4855f7": {
+      "text": "jadi mari kita pecahkan hash menggunakan hashcat",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "02f973395a72e59c9b70c6c17426830c94e0e78b0a6906448594119c4d24e094": {
+      "text": "Yey, kita berhasil memecahkan hash-nya, jadi mari kita gunakan kredensial (svc-admin:management2005) untuk melakukan enumerasi lebih lanjut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "b7ce22784376ea31fb915494c13eff563cfc0c3350f03947b09153552c919b1d": {
+      "text": "Port 139 & 445 - SMB",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "d291a85f577859ef43720266bf518ee640ed432f021419fa9388792602244c17": {
+      "text": "Melakukan enumerasi share SMB menggunakan kredensial yang telah kita peroleh pada langkah sebelumnya (svc-admin:management2005) menggunakan SMBMAP.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "a620eff46e4a63ee307be66a855a53e8179b6e97afe6782006320f7f5b16fa27": {
+      "text": "Kami mendapatkan saham yang menarik, itu adalah saham cadangan, mari kita periksa isi saham tersebut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "d85bda5d3c26497df7575231b9305b500b0375de6c9ac7202d4c167bc84261f5": {
+      "text": "hmhmhm kita mendapatkan hash yang menarik, mari kita identifikasi jenis hash apa itu. menggunakan platform online [[[[T10]]][[[T11]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "dde23bd89067052a7f0baf2de7bf8d351b30d9ab34709fac23eba47149a01cde": {
+      "text": "![[[[T13]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "c1436a56deb2fa04c3d68ef83562534052f781eb5faea7f4f91a4119f8d93935": {
+      "text": "Kami mengidentifikasi bahwa itu dienkode base64 jadi kami mendekodenya menggunakan Cyberchef lalu, voila kami mendapatkan nama pengguna dan kata sandi baru [[[T14]]]",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "a8eb0b44a7944a0c38cf24f09937d149a8c3a4828c5896b29f1123de44e4ee76": {
+      "text": "Jadi, mari kita gunakan kredensial tersebut untuk melakukan enumerasi lebih lanjut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "c9eaadf639dfcc6fecc01dac332de2e56efa379f64ec789af747e0b8da20650a": {
+      "text": "Karena pengguna saat ini adalah cadangan untuk DC, akun ini memiliki izin unik yang memungkinkan semua perubahan Active Directory disinkronkan dengan akun pengguna ini, termasuk hash kata sandi. Kita akan menggunakan salah satu alat impacket yang disebut [[[T16]]] untuk mengambil hash kata sandi.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "1d69aca4e47c6d5493cffb7731b6b15ac9c6b2a0bb807db185b4cfec87e560a5": {
+      "text": "Dari serangan dcsync kita berhasil mendapatkan hash administrator, jadi mari kita coba melakukan serangan pass the hash untuk masuk ke server sebagai pengguna administrator menggunakan winrm jahat.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "085b2af6d2068ee9408d0e1c1c0abe6a16342041528e8402d24fe2e26acac414": {
+      "text": "Yey, kita berhasil masuk ke server sebagai pengguna administrator.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:49.159Z"
+    },
+    "d81fb87451d7429a2b1e8d9a5d7dfe12fbea05eee9c31a40c4c9a6eb4a110d87": {
+      "text": "Lensa Siber",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:50.551Z"
+    },
+    "c58ba6930be324bf69eda2c664dca75a73b45f8a5443c1d3e2885b89a43dd28d": {
+      "text": "Enum Port 80 - http Mengakses port 80 Dirsearch: mari kita periksa halaman satu per satu, di halaman js kita menemukan sesuatu yang menarik, yaitu skrip javascript yang digunakan oleh",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:50.551Z"
+    },
+    "a53f9721201aadadef7b4d809405fa42d33e52b387ac9d67e6ebf88214db5358": {
+      "text": "Port 80 - http",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "2154b34837ea8582c24d530573cfc57568da271ecc239b5c1c9d43808e357198": {
+      "text": "Mengakses port 80",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "29fcfb5e80b8e9e5d190254de59091d13ed85942ee4290cf7adb2f1b9f4b10b8": {
+      "text": "Dirsearch:",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "f7f72b407b2cf9a28620fee16db47befbbece6359fd76f202b7b0e22f3e607d4": {
+      "text": "Mari kita periksa halaman satu per satu. Di halaman js, kita menemukan sesuatu yang menarik, yaitu skrip javascript yang digunakan oleh aplikasi web, image-extractor.js.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "0b6baf6e1dc193e1a2eed546b9c8c42420dfce843aa98fb843ef70034017628c": {
+      "text": "lihat apakah ada yang mengambil data di port 61777, mari kita pindah ke port tersebut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "3c0258a4083ae318b4e4e2e691b101e69275accdd2216f1718eae6c65f78cc6e": {
+      "text": "Port 61777 - http",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "bb7176ee89e1b11964cc366e1d23c148aa3cd4cd1d7cce6fc1fca8fac63f533e": {
+      "text": "mengakses port 61777",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "da39cb8f35975ff0f97ee354d8b588c1ffdd90cca45d6633392f2831c0ec9a70": {
+      "text": "Dari situs web tersebut, kami berhasil mengidentifikasi bahwa server menggunakan Apache Tika versi 1.17. Mari kita cari exploit publik yang terkait dengan versi tersebut.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "51ab4ed5dbbed25752e9e32bed47c5d90b13e12f254cfd0c8fac884c2eadb5ce": {
+      "text": "Setelah membaca exploit tersebut, dijelaskan bahwa kita dapat menggunakan skrip exploit untuk menjalankan perintah di server. Jadi, mari kita unduh skrip exploit dan jalankan untuk membuat revshell.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "5e259d342251123bb87376a7e7d9b668b9dcf222530090cba2ea94ad274657b6": {
+      "text": "Revshell berhasil dibuat, sekarang mari kita dapatkan flag user dan lakukan privesc.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "d6a8ad76a8848f6971ffef492af0020d17ed0edc324b3e659fb2421d81f86335": {
+      "text": "WinPriv",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "3f888171a6a7a434edb50298faff46963546328e2a621cb81e074f433cb9d8e5": {
+      "text": "menjalankan winpeas.exe pada target",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "7af541f75a2e1853496f72ceb964443ec2cf8b4166296e4a35eb4537f20ac378": {
+      "text": "Manual:",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "8feada99db086abd820d1c01b77b66b23c4a1e10d799e732cf0845f77ac8f2e7": {
+      "text": "Saat melakukan enumerasi sistem, kami menemukan bahwa kunci registri **AlwaysInstallElevated** diaktifkan, yang menunjukkan bahwa paket MSI dapat diinstal dengan hak akses yang lebih tinggi. Jadi saya membuat MSI berbahaya yang akan membuat revshell, lalu saya akan menginstalnya di server target.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    },
+    "067edf5cad08479574ffec7e43daa90404b9fa031a094f7073df129487ce9af9": {
+      "text": "Voila, kita mendapatkan akses administrator dan flag admin.",
+      "provider": "apps-script",
+      "from": "en",
+      "to": "id",
+      "updatedAt": "2026-11-19T12:06:53.709Z"
+    }
+  }
 }
