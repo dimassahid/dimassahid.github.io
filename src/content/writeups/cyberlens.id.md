@@ -1,5 +1,5 @@
 ---
-title: "Lensa Siber"
+title: "CyberLens"
 description: "Enum Port 80 - http Mengakses port 80 Dirsearch: mari kita periksa halaman satu per satu, di halaman js kita menemukan sesuatu yang menarik, yaitu skrip javascript yang digunakan oleh"
 lang: "id"
 translationKey: "cyberlens"

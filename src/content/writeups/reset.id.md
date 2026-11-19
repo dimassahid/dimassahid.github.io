@@ -1,5 +1,5 @@
 ---
-title: "Mengatur ulang"
+title: "Reset"
 description: "Enumerasi Port 88 - Kerberos. Kita melihat bahwa port 88 terbuka, jadi mari kita lakukan enumerasi pada nama pengguna AD menggunakan kebrute. Kita juga melakukan enumerasi otomatis menggunakan enum4linux."
 lang: "id"
 translationKey: "reset"

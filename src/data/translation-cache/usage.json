@@ -2,16 +2,16 @@
   "version": 1,
   "months": {
     "2026-11": {
-      "characters": 5879,
-      "requests": 8,
-      "calls": 80
+      "characters": 123434,
+      "requests": 119,
+      "calls": 1455
     }
   },
   "days": {
     "2026-11-19": {
-      "characters": 5879,
-      "requests": 8,
-      "calls": 80
+      "characters": 123434,
+      "requests": 119,
+      "calls": 1455
     }
   }
 }

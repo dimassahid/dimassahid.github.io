@@ -1,5 +1,5 @@
 ---
-title: "Direktori Agresif"
+title: "Attacktive Directory"
 description: "Enum Enum4Linux: Port 88 - Kerberos kita melihat port kerberos terbuka jadi mari kita coba untuk menghitung nama pengguna menggunakan kerbrute Setelah penghitungan akun pengguna selesai, kita dapat"
 lang: "id"
 translationKey: "attacktive-directory"
