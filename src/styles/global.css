@@ -216,24 +216,7 @@ main {
    Typography helpers
    ========================================================================== */
 
-.kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.kicker::before {
-  content: "";
-  width: 1.75rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.6;
-}
+.kicker { font-size: 0.85rem; color: var(--text-muted); }
 
 .section-title {
   font-size: clamp(1.5rem, 3.2vw, 2.1rem);
