@@ -10,10 +10,15 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-export function cacheKey({ provider = "azure", from, to, text }) {
+export function cacheKey({ provider = "apps-script", from, to, text }) {
   return createHash("sha256")
     .update(`${provider}|${from}|${to}|${text}`, "utf8")
     .digest("hex");
+}
+
+/** Apps Script resets its quota at midnight Pacific Time, so the daily bucket follows that clock. */
+export function pacificDate(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(date);
 }
 
 async function readJson(file, fallback) {
@@ -40,7 +45,9 @@ export async function createTranslationCache(options = {}) {
 
   const store = await readJson(translationsFile, { version: 1, entries: {} });
   store.entries ??= {};
-  const usage = await readJson(usageFile, { version: 1, months: {} });
+  const usage = await readJson(usageFile, { version: 1, months: {}, days: {} });
+  usage.months ??= {};
+  usage.days ??= {};
 
   let dirty = false;
 
@@ -63,7 +70,7 @@ export async function createTranslationCache(options = {}) {
       if (existing && existing.text === text) return;
       store.entries[key] = {
         text,
-        provider: meta.provider ?? "azure",
+        provider: meta.provider ?? "apps-script",
         from: meta.from,
         to: meta.to,
         updatedAt: new Date().toISOString()
@@ -75,19 +82,36 @@ export async function createTranslationCache(options = {}) {
       return Object.keys(store.entries).length;
     },
 
-    /** Track spend per calendar month so the guard rails survive across runs. */
-    recordUsage({ characters, requests }) {
+    /**
+     * Track spend per calendar month (characters/requests) and per Pacific-Time
+     * day (calls, the unit Apps Script actually rate limits) so the guard rails
+     * survive across runs.
+     */
+    recordUsage({ characters = 0, requests = 0, calls = 0 }) {
       const month = new Date().toISOString().slice(0, 7);
-      const bucket = usage.months[month] ?? { characters: 0, requests: 0 };
+      const bucket = usage.months[month] ?? { characters: 0, requests: 0, calls: 0 };
       bucket.characters += characters;
       bucket.requests += requests;
+      bucket.calls += calls;
       usage.months[month] = bucket;
+
+      const day = pacificDate();
+      const daily = usage.days[day] ?? { characters: 0, requests: 0, calls: 0 };
+      daily.characters += characters;
+      daily.requests += requests;
+      daily.calls += calls;
+      usage.days[day] = daily;
+
       dirty = true;
       return bucket;
     },
 
     usageFor(month = new Date().toISOString().slice(0, 7)) {
-      return usage.months[month] ?? { characters: 0, requests: 0 };
+      return usage.months[month] ?? { characters: 0, requests: 0, calls: 0 };
+    },
+
+    usageForDay(day = pacificDate()) {
+      return usage.days[day] ?? { characters: 0, requests: 0, calls: 0 };
     },
 
     async save() {

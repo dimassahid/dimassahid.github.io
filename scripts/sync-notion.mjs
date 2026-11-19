@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Notion -> local Markdown sync with optional Azure Translator output.
+ * Notion -> local Markdown sync with optional Google Apps Script translation.
  *
  * Usage:
  *   npm run sync:notion                 # sync + translate missing languages
@@ -8,7 +8,9 @@
  *   npm run sync:notion -- --dry-run    # same as --check, verbose
  *   npm run sync:notion -- --force      # ignore timestamps, rewrite everything
  *   npm run sync:notion -- --prune      # delete local files whose Notion page is gone
- *   npm run sync:notion -- --limit 5 --slug my-article
+ *   npm run sync:notion -- --newest 3   # only the N newest translation groups
+ *   npm run sync:notion -- --slug a,b   # only these slugs (comma separated)
+ *   npm run sync:notion -- --limit 5
  *
  * Required env (see .env.example):
  *   NOTION_TOKEN, NOTION_DATABASE_ID (or NOTION_DATA_SOURCE_ID)
@@ -17,7 +19,7 @@
  *   NOTION_DEFAULT_CATEGORY (fallback category key when the page has none),
  *   NOTION_DRAFT_STATUSES (comma separated statuses treated as drafts),
  *   NOTION_PROP_* (property name overrides, e.g. NOTION_PROP_OS),
- *   TRANSLATION_* (Azure credentials and guard rails)
+ *   TRANSLATION_* (Apps Script URL/token and guard rails)
  */
 import "dotenv/config";
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
@@ -25,7 +27,7 @@ import path from "node:path";
 import process from "node:process";
 import matter from "gray-matter";
 import { blocksToMarkdown, plainText } from "./notion/blocks-to-markdown.mjs";
-import { createTranslationService } from "./translation/index.mjs";
+import { createTranslationService, TranslationBudgetError } from "./translation/index.mjs";
 
 const CONTENT_ROOT = path.resolve("src/content");
 const SECTIONS = new Set(["writeups", "notes"]);
@@ -37,7 +39,8 @@ const flags = {
   force: args.includes("--force"),
   prune: args.includes("--prune"),
   limit: numberArg("--limit"),
-  slug: stringArg("--slug")
+  newest: numberArg("--newest"),
+  slugs: listArg("--slug")
 };
 
 function numberArg(name) {
@@ -52,6 +55,16 @@ function stringArg(name) {
   if (index === -1) return undefined;
   const value = args[index + 1];
   return value && !value.startsWith("--") ? value : undefined;
+}
+
+/** `--slug reset,cyberlens` -> ["reset", "cyberlens"] */
+function listArg(name) {
+  const value = stringArg(name);
+  if (!value) return [];
+  return value
+    .split(",")
+    .map((item) => slugify(item))
+    .filter(Boolean);
 }
 
 const log = {
@@ -451,12 +464,38 @@ async function collectArticles(client) {
   }
 
   let selected = articles;
-  if (flags.slug) {
-    selected = selected.filter((article) => article.slug === flags.slug || article.translationKey === flags.slug);
-    if (selected.length === 0) log.warn(`No Notion page matches --slug ${flags.slug}`);
+  if (flags.slugs.length > 0) {
+    const wanted = new Set(flags.slugs);
+    selected = selected.filter((article) => wanted.has(article.slug) || wanted.has(article.translationKey));
+    for (const slug of wanted) {
+      if (!selected.some((article) => article.slug === slug || article.translationKey === slug)) {
+        log.warn(`No Notion page matches --slug ${slug}`);
+      }
+    }
   }
+  if (flags.newest) selected = newestGroups(selected, flags.newest);
   if (flags.limit) selected = selected.slice(0, flags.limit);
   return selected;
+}
+
+function publishedTime(article) {
+  const time = new Date(article.published ?? 0).getTime();
+  return Number.isNaN(time) ? 0 : time;
+}
+
+/**
+ * Keep every language page of the N newest translation groups. Notion query
+ * order is arbitrary, so `--newest` sorts by the Published date instead.
+ */
+function newestGroups(articles, count) {
+  const groups = groupArticles(articles);
+  const ranked = [...groups.entries()]
+    .map(([key, group]) => ({ key, group, time: Math.max(...group.map(publishedTime)) }))
+    .sort((left, right) => right.time - left.time)
+    .slice(0, count);
+
+  log.info(`  --newest ${count} selected: ${ranked.map((entry) => entry.key).join(", ")}`);
+  return ranked.flatMap((entry) => entry.group);
 }
 
 function groupArticles(articles) {
@@ -531,6 +570,10 @@ async function syncArticleGroup(key, group, translation, counts) {
   try {
     result = await translation.translateArticle(source, { from: source.lang, to: targetLang });
   } catch (error) {
+    if (error instanceof TranslationBudgetError) {
+      log.warn(`  ${targetLang}: deferred — ${error.message}`);
+      return "budget";
+    }
     log.error(`  ${targetLang}: translation failed — ${error.message}`);
     counts.skipped += 1;
     return;
@@ -564,7 +607,11 @@ async function run() {
   const counts = { created: 0, updated: 0, unchanged: 0, skipped: 0, "would-write": 0, translated: 0 };
 
   for (const [key, group] of groups) {
-    await syncArticleGroup(key, group, translation, counts);
+    const outcome = await syncArticleGroup(key, group, translation, counts);
+    if (outcome === "budget") {
+      counts.budget = true;
+      break;
+    }
   }
 
   let pruned = 0;
@@ -578,9 +625,15 @@ async function run() {
     `  skipped: ${counts.skipped}, would-write: ${counts["would-write"]}, translated targets: ${counts.translated}`
   );
   if (flags.prune) log.info(`  pruned: ${pruned}`);
+  if (counts.budget) log.info("  translation paused: budget guard reached, run the sync again later");
   if (typeof stats.characters === "number") {
     log.info(
-      `  translation: ${stats.segments} segment(s), ${stats.characters} character(s), ${stats.cacheHits} cache hit(s)`
+      `  translation: ${stats.segments} segment(s), ${stats.characters} character(s), ` +
+        `${stats.requests} request(s), ${stats.calls} call(s), ${stats.cacheHits} cache hit(s)`
+    );
+    log.info(
+      `  apps script calls today: ${stats.daily.calls}/${translation.limits.callsPerDay} ` +
+        `(run limit ${translation.limits.callsPerRun})`
     );
   }
   log.info(`  notion requests: ${client.requests}`);

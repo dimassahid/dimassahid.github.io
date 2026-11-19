@@ -3,7 +3,7 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "description": "Bilingual (ID/EN) cybersecurity consultant portfolio and technical blog powered by Astro, Notion and Azure Translator.",
+  "description": "Bilingual (ID/EN) cybersecurity consultant portfolio and technical blog powered by Astro, Notion and a free Google Apps Script translator.",
   "engines": {
     "node": ">=20.19.0"
   },
@@ -16,6 +16,7 @@
     "sync:notion": "node scripts/sync-notion.mjs",
     "sync:notion:check": "node scripts/sync-notion.mjs --check",
     "images:notion": "node scripts/localize-notion-images.mjs",
+    "translate:probe": "node scripts/translate-probe.mjs",
     "validate:content": "node scripts/validate-content.mjs",
     "verify": "npm run validate:content && npm run check && npm run build"
   },

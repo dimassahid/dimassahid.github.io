@@ -180,7 +180,7 @@ const en = {
   },
   footer: {
     tagline: "Security research, technical writeups, and practical engineering notes.",
-    builtWith: "Static site built with Astro. Content synchronized from Notion. Translations via Azure Translator.",
+    builtWith: "Static site built with Astro. Content synchronized from Notion. Translations via Google Translate (Apps Script).",
     rights: "All rights reserved.",
     disclaimer: "Demonstration content is labelled. Opinions are my own.",
     navLabel: "Footer navigation",
@@ -370,7 +370,7 @@ const id: typeof en = {
   },
   footer: {
     tagline: "Riset keamanan, technical writeup, dan catatan rekayasa yang praktis.",
-    builtWith: "Situs statis dengan Astro. Konten disinkronkan dari Notion. Terjemahan melalui Azure Translator.",
+    builtWith: "Situs statis dengan Astro. Konten disinkronkan dari Notion. Terjemahan melalui Google Translate (Apps Script).",
     rights: "Seluruh hak dilindungi.",
     disclaimer: "Konten demonstrasi diberi label. Opini adalah milik pribadi.",
     navLabel: "Navigasi footer",
