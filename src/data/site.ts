@@ -91,9 +91,8 @@ export const site = {
   email: "syahid354313@gmail.com",
   /** Social and professional profiles shown in the header/footer/contact page. */
   socials: [
-    { key: "github", label: "GitHub", url: "https://github.com/YOUR-USERNAME" },
-    { key: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/dimas-sahid-abdullah/" },
-    { key: "x", label: "X / Twitter", url: "https://x.com/YOUR-USERNAME" }
+    { key: "github", label: "GitHub", url: "https://github.com/dimassahid" },
+    { key: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/dimas-sahid-abdullah/" }
   ],
   /** Open Graph image. Replace with a 1200x630 PNG for best results. */
   ogImage: "/images/og-default.svg",

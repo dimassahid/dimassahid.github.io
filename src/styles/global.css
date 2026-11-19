@@ -905,21 +905,28 @@ main {
 }
 
 .breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
   padding: 0;
   margin: 0 0 1rem;
-  list-style: none;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--text-subtle);
 }
 
+/* The list is the flex container: the UA rule `ol { list-style-type: decimal }`
+   beats the inherited `list-style: none`, so the reset has to target the <ol>. */
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
 .breadcrumbs li + li::before {
   content: "/";
-  margin-right: 0.4rem;
+  margin-right: 0;
   color: var(--border-strong);
 }
 
