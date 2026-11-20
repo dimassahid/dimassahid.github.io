@@ -121,8 +121,7 @@ const en = {
     loadMoreHint: "Showing {shown} of {total}",
     showingAll: "Showing all {total} articles",
     availableIn: "Only available in {language}",
-    bodySearchNote: "Content search loads on demand and stays in your browser.",
-    sampleNote: "Articles marked 'Sample content' ship with this template and describe illustrative scenarios. Replace them with your own reviewed work before publishing."
+    bodySearchNote: "Content search loads on demand and stays in your browser."
   },
   notes: {
     title: "Notes",
@@ -306,8 +305,7 @@ const id: typeof en = {
     loadMoreHint: "Menampilkan {shown} dari {total}",
     showingAll: "Menampilkan seluruh {total} artikel",
     availableIn: "Hanya tersedia dalam {language}",
-    bodySearchNote: "Pencarian isi dimuat sesuai permintaan dan tetap berada di browser Anda.",
-    sampleNote: "Artikel bertanda 'Konten contoh' adalah bawaan template dan menggambarkan skenario ilustratif. Ganti dengan karya Anda sendiri yang sudah ditinjau sebelum publikasi."
+    bodySearchNote: "Pencarian isi dimuat sesuai permintaan dan tetap berada di browser Anda."
   },
   notes: {
     title: "Catatan",
