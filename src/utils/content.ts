@@ -70,7 +70,7 @@ function toPost(entry: AnyEntry, section: Section, lang: Lang, isFallback: boole
     translationStatus: entry.data.translationStatus,
     sourceLang: entry.data.sourceLang ?? entry.data.lang,
     isFallback,
-    href: localizePath(`/${section}/${slug}/`, lang),
+    href: localizePath(`/${section}/${slug}/`),
     author: entry.data.author
   };
 }

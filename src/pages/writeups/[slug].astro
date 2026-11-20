@@ -1,0 +1,22 @@
+---
+import { render } from "astro:content";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import { defaultLanguage } from "../../data/site";
+import { getPost, getPosts } from "../../utils/content";
+
+export async function getStaticPaths() {
+  const posts = await getPosts("writeups", defaultLanguage);
+  return posts.map((post) => ({ params: { slug: post.slug } }));
+}
+
+const slug = Astro.params.slug as string;
+
+const detail = await getPost("writeups", defaultLanguage, slug);
+if (!detail) throw new Error(`Missing writeups entry for ${slug}.`);
+
+const { Content, headings } = await render(detail.entry);
+---
+
+<ArticleLayout post={detail.post} detail={detail} headings={headings}>
+  <Content />
+</ArticleLayout>

@@ -1,0 +1,51 @@
+---
+import ListingExplorer from "../../components/ListingExplorer.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { defaultLanguage } from "../../data/site";
+import { getPosts } from "../../utils/content";
+import { useTranslations } from "../../utils/i18n";
+import { breadcrumbJsonLd } from "../../utils/seo";
+
+const lang = defaultLanguage;
+const t = useTranslations(lang);
+const posts = await getPosts("notes", lang);
+
+const jsonLd = [
+  breadcrumbJsonLd([
+    { label: "Home", path: "/" },
+    { label: t.notes.title, path: "/notes/" }
+  ])
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.notes.title}
+  description={t.notes.intro}
+  canonicalPath="/notes/"
+  jsonLd={jsonLd}
+>
+  <header class="page-header">
+    <div class="wrap">
+      <nav class="breadcrumbs" aria-label={t.common.menu}>
+        <ol>
+          <li><a href="/">{t.common.home}</a></li>
+          <li aria-current="page">{t.notes.title}</li>
+        </ol>
+      </nav>
+      <h1 class="page-title">{t.notes.title}</h1>
+      <p class="page-lead">{t.notes.intro}</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="sample-banner" style="margin-bottom: 1.5rem;">
+        <strong>{t.common.sampleBadge}</strong>
+        <span>{t.listing.sampleNote}</span>
+      </p>
+
+      <ListingExplorer lang={lang} posts={posts} indexUrl="/search-index.json" />
+    </div>
+  </section>
+</BaseLayout>

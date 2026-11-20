@@ -166,6 +166,19 @@ hr {
   max-width: var(--wrap-narrow);
 }
 
+/* Article pages: keep the title block on the same measure as the body copy. */
+.wrap.article-header {
+  max-width: calc(var(--article-measure) + 2 * var(--gutter));
+}
+
+/* With the two-column layout the body starts at the outer gutter, so the
+   header must use the full wrapper width to line up with the article text. */
+@media (min-width: 1020px) {
+  .wrap.article-header {
+    max-width: var(--wrap);
+  }
+}
+
 main {
   flex: 1 0 auto;
 }
@@ -684,12 +697,6 @@ main {
   height: 1.05rem;
 }
 
-.lang-toggle {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-}
-
 .theme-icon-sun,
 [data-theme="light"] .theme-icon-moon {
   display: none;
@@ -1188,6 +1195,13 @@ main {
   color: var(--text-muted);
   font-size: 1.0125rem;
   line-height: 1.78;
+  overflow-wrap: break-word;
+}
+
+/* Long URLs, hashes and command output should never widen the page. */
+.prose a,
+.prose code {
+  overflow-wrap: anywhere;
 }
 
 .prose > * + * {
@@ -1259,6 +1273,7 @@ main {
 
 .prose img {
   width: 100%;
+  height: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
@@ -1266,9 +1281,12 @@ main {
 .prose table {
   display: block;
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   white-space: nowrap;
 }
 
@@ -1287,10 +1305,13 @@ main {
 
 .prose pre {
   position: relative;
+  max-width: 100%;
   padding: 1rem 1.15rem;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   font-size: 0.82rem;
   line-height: 1.65;
   tab-size: 2;
@@ -1870,10 +1891,13 @@ main {
   font-size: 0.9rem;
 }
 
-/* Keep the article measure readable before the two-column layout kicks in. */
+/* Keep the article measure readable before the two-column layout kicks in.
+   The cap must sit on the grid container, not on the grid item: an auto inline
+   margin on a grid item (`.article-main`) makes it size to its max-content
+   width and overflow the viewport on phones. */
 @media (max-width: 1019px) {
-  .article-main {
-    max-width: 46rem;
+  .article-layout {
+    max-width: var(--article-measure);
     margin-inline: auto;
   }
 
@@ -1923,8 +1947,70 @@ main {
     margin-right: 0.5rem;
   }
 
+  .article-meta {
+    gap: 0.45rem 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .article-layout {
+    gap: 1.5rem;
+    padding-block: 1.75rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.6rem, 7vw, 1.95rem);
+    overflow-wrap: break-word;
+  }
+
+  .page-lead {
+    font-size: 0.975rem;
+  }
+
   .prose {
     font-size: 0.975rem;
+    line-height: 1.72;
+  }
+
+  .prose h2 {
+    margin-top: 2rem;
+    font-size: 1.3rem;
+  }
+
+  .prose h3 {
+    margin-top: 1.5rem;
+    font-size: 1.08rem;
+  }
+
+  /* Nested lists eat too much width on narrow phones. */
+  .prose ul,
+  .prose ol {
+    padding-left: 1.1rem;
+  }
+
+  .prose pre {
+    padding: 0.85rem 0.9rem;
+    font-size: 0.78rem;
+  }
+
+  .prose blockquote {
+    padding: 0.75rem 0.9rem;
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.4rem 0.55rem;
+  }
+
+  .toc {
+    padding: 0.85rem 0.9rem;
+  }
+
+  .article-nav-link {
+    padding: 0.85rem 0.95rem;
+  }
+
+  .article-footer {
+    margin-top: 2.25rem;
   }
 
   .summary-stats {

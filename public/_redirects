@@ -1,6 +1,8 @@
 # Cloudflare Pages redirects
 # https://developers.cloudflare.com/pages/configuration/redirects/
 
-# Astro already emits directory-style URLs; these keep bare language prefixes tidy.
-/id        /id/        301
-/en        /en/        301
+# The site is English-only at the root; keep old language-prefixed URLs working.
+/en        /        301
+/en/*      /:splat  301
+/id        /        301
+/id/*      /:splat  301

@@ -44,6 +44,7 @@
 
   --wrap: 1120px;
   --wrap-narrow: 760px;
+  --article-measure: 46rem;
   --header-height: 68px;
   --gutter: clamp(1rem, 4vw, 2.5rem);
 

@@ -12,7 +12,7 @@ interface Props {
 const { post, lang } = Astro.props;
 const t = useTranslations(lang);
 const category = categoryLabel(post.category, lang);
-const sectionBase = `/${lang}/${post.section}/`;
+const sectionBase = `/${post.section}/`;
 const published = formatDate(post.publishDate, lang);
 ---
 

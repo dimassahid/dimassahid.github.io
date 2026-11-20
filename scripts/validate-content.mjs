@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Content validator for the bilingual article collections.
+ * Content validator for the article collections.
  *
- * Runs without Astro so it can be used in CI before `astro check`/`build`.
- * Errors fail the run, warnings are printed but allowed (for example an article
- * that only exists in one language and will use the fallback route).
+ * The site is published in English from the site root; Indonesian articles are
+ * kept in src/content as an archive and are not routed. Errors fail the run,
+ * warnings are printed but allowed (for example an archived article that has no
+ * English counterpart and therefore never appears on the site).
  */
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
@@ -13,7 +14,10 @@ import matter from "gray-matter";
 
 const CONTENT_ROOT = path.resolve("src/content");
 const SECTIONS = ["writeups", "notes"];
+/** Languages that may appear in frontmatter (Indonesian is kept as an archive). */
 const LANGS = ["id", "en"];
+/** Languages served by the site; routes are built at the root, without a prefix. */
+const ROUTED_LANGS = ["en"];
 const PAGES = ["about", "portfolio", "contact"];
 const ALLOWED_FIELDS = new Set([
   "title",
@@ -156,20 +160,24 @@ function checkFrontmatter(article, categoryKeys) {
 
 function buildRoutes(articles) {
   const routes = new Set();
-  for (const lang of LANGS) {
-    routes.add(`/${lang}`);
-    for (const page of PAGES) routes.add(`/${lang}/${page}`);
-    for (const section of SECTIONS) {
-      routes.add(`/${lang}/${section}`);
-      for (const article of articles.filter((item) => item.section === section)) {
-        routes.add(`/${lang}/${section}/${translationKeyOf(article)}`);
-      }
+  routes.add("/");
+  for (const page of PAGES) routes.add(`/${page}`);
+  for (const section of SECTIONS) {
+    routes.add(`/${section}`);
+    const published = articles.filter(
+      (item) => item.section === section && ROUTED_LANGS.includes(item.data.lang)
+    );
+    for (const article of published) {
+      routes.add(`/${section}/${translationKeyOf(article)}`);
     }
   }
   return routes;
 }
 
 function checkLinks(article, routes) {
+  // Archived translations are not built, so their links are not checked.
+  if (!ROUTED_LANGS.includes(article.data.lang)) return;
+
   const file = relative(article.file);
   const matches = article.content.matchAll(/\]\((\/[^)\s#?]*)/g);
   for (const match of matches) {
@@ -201,9 +209,9 @@ function checkGroups(articles) {
   }
 
   for (const [key, langs] of groups) {
-    if (langs.size < LANGS.length) {
-      const missing = LANGS.filter((lang) => !langs.has(lang));
-      report.warn(`${key}: missing ${missing.join(", ")} translation; the fallback route will be used.`);
+    if (!ROUTED_LANGS.some((lang) => langs.has(lang))) {
+      const archived = [...langs].join(", ");
+      report.warn(`${key}: archived in ${archived} only; no English version, so it is not published.`);
     }
   }
 

@@ -1,7 +1,7 @@
 ---
 import type { Lang } from "../data/site";
 import { navigation, site } from "../data/site";
-import { useTranslations } from "../utils/i18n";
+import { localizePath, useTranslations } from "../utils/i18n";
 
 interface Props {
   lang: Lang;
@@ -10,18 +10,13 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
-
-function localized(path: string): string {
-  const clean = path.replace(/^\/+/, "").replace(/\/+$/, "");
-  return clean === "" ? `/${lang}/` : `/${lang}/${clean}/`;
-}
 ---
 
 <footer class="site-footer">
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a class="brand" href={`/${lang}/`}>
+        <a class="brand" href="/">
           <span class="brand-mark brand-mark-photo" aria-hidden="true">
             <img src="/images/logo-mark-sm.png" alt="" width="96" height="128" loading="lazy" decoding="async" />
           </span>
@@ -38,7 +33,7 @@ function localized(path: string): string {
         <nav aria-label={t.footer.navLabel}>
           <ul class="footer-links">
             {navigation.map((item) => (
-              <li><a href={localized(item.path)}>{item.label[lang]}</a></li>
+              <li><a href={localizePath(item.path)}>{item.label[lang]}</a></li>
             ))}
           </ul>
         </nav>

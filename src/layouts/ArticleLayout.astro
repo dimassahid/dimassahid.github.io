@@ -3,7 +3,7 @@ import type { MarkdownHeading } from "astro";
 import ArticleCard from "../components/ArticleCard.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import { categoryLabel } from "../data/categories";
-import { languageMeta, navigation, site, type Lang } from "../data/site";
+import { languageMeta, navigation, site } from "../data/site";
 import { getAdjacentPosts, getRelatedPosts, type Post, type PostDetail } from "../utils/content";
 import { fill, formatDate, localizePath, useTranslations } from "../utils/i18n";
 import { articleJsonLd, breadcrumbJsonLd } from "../utils/seo";
@@ -15,22 +15,13 @@ interface Props {
   headings: MarkdownHeading[];
 }
 
-const { post, detail, headings } = Astro.props;
+const { post, headings } = Astro.props;
 const lang = post.lang;
 const t = useTranslations(lang);
 
-const otherLang: Lang = lang === "id" ? "en" : "id";
-const hasTranslation = detail.availableLanguages.includes(otherLang);
-
 const sectionLabel = t[post.section].title;
-const sectionHref = localizePath(`/${post.section}/`, lang);
-const canonicalPath = `/${lang}/${post.section}/${post.slug}/`;
-const otherPath = localizePath(`/${post.section}/${post.slug}/`, otherLang);
-
-const alternates: Partial<Record<Lang, string>> = {
-  [lang]: canonicalPath,
-  ...(hasTranslation ? { [otherLang]: otherPath } : {})
-};
+const sectionHref = localizePath(`/${post.section}/`);
+const canonicalPath = `/${post.section}/${post.slug}/`;
 
 const related = await getRelatedPosts(post, 3);
 const { previous, next } = await getAdjacentPosts(post);
@@ -58,8 +49,8 @@ const jsonLd = [
     tags: post.tags
   }),
   breadcrumbJsonLd([
-    { label: homeLabel, path: `/${lang}/` },
-    { label: sectionLabel, path: `/${lang}/${post.section}/` },
+    { label: homeLabel, path: "/" },
+    { label: sectionLabel, path: `/${post.section}/` },
     { label: post.title, path: canonicalPath }
   ])
 ];
@@ -70,16 +61,15 @@ const jsonLd = [
   title={post.title}
   description={post.description}
   canonicalPath={canonicalPath}
-  alternates={alternates}
   type="article"
   jsonLd={jsonLd}
 >
   <article>
     <header class="page-header">
-      <div class="wrap wrap-narrow">
+      <div class="wrap wrap-narrow article-header">
         <nav class="breadcrumbs" aria-label={t.common.menu}>
           <ol>
-            <li><a href={`/${lang}/`}>{homeLabel}</a></li>
+            <li><a href="/">{homeLabel}</a></li>
             <li><a href={sectionHref}>{sectionLabel}</a></li>
             <li aria-current="page">{post.title}</li>
           </ol>
@@ -114,15 +104,6 @@ const jsonLd = [
         {notices.map((notice) => (
           <p class="notice notice-warning" style="margin-top: 1rem;">{notice}</p>
         ))}
-
-        {hasTranslation && (
-          <p class="eyebrow" style="margin-top: 1rem;">
-            {t.article.alsoAvailableIn}:{" "}
-            <a href={otherPath} hreflang={languageMeta[otherLang].htmlLang}>
-              {languageMeta[otherLang].label}
-            </a>
-          </p>
-        )}
       </div>
     </header>
 

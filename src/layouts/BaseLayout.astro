@@ -14,12 +14,10 @@ interface Props {
   /** Page title without the site name. */
   title?: string;
   description?: string;
-  /** Language-neutral path of this page, e.g. "/writeups/". */
+  /** Site-relative path of this page, used by the navbar for the active item. */
   currentPath?: string;
   /** Site-relative canonical path of this exact page. */
   canonicalPath: string;
-  /** Paths of the same page per language, for hreflang. */
-  alternates?: Partial<Record<Lang, string>>;
   image?: string;
   type?: "website" | "article";
   noindex?: boolean;
@@ -31,8 +29,7 @@ const {
   title,
   description = site.description[lang],
   canonicalPath,
-  currentPath = canonicalPath.replace(/^\/(id|en)(?=\/|$)/, "") || "/",
-  alternates,
+  currentPath = canonicalPath,
   image,
   type = "website",
   noindex = false,
@@ -44,9 +41,6 @@ const meta = languageMeta[lang];
 const fullTitle = formatPageTitle(title);
 const canonical = absoluteUrl(canonicalPath);
 const ogImage = ogImageUrl(image);
-const otherLang: Lang = lang === "id" ? "en" : "id";
-const alternatePath = alternates?.[otherLang] ?? `/${otherLang}${currentPath === "/" ? "/" : currentPath}`;
-const hasAlternates = Boolean(alternates);
 const structuredData = JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd);
 ---
 
@@ -61,22 +55,6 @@ const structuredData = JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd);
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
 
-    {hasAlternates &&
-      Object.entries(alternates ?? {}).map(([altLang, path]) =>
-        path ? (
-          <link
-            rel="alternate"
-            hreflang={languageMeta[altLang as Lang].htmlLang}
-            href={absoluteUrl(path)}
-          />
-        ) : null
-      )}
-    <link
-      rel="alternate"
-      hreflang="x-default"
-      href={absoluteUrl(alternates?.en ?? alternates?.id ?? `/${lang}${currentPath === "/" ? "/" : currentPath}`)}
-    />
-
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
@@ -85,7 +63,6 @@ const structuredData = JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd);
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:alt" content={`${site.name} - ${site.role[lang]}`} />
     <meta property="og:locale" content={meta.ogLocale} />
-    <meta property="og:locale:alternate" content={languageMeta[otherLang].ogLocale} />
     {type === "article" && <meta property="article:author" content={site.name} />}
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -122,7 +99,7 @@ const structuredData = JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd);
   </head>
   <body>
     <a class="skip-link" href="#main-content">{t.common.skipToContent}</a>
-    <Navbar lang={lang} currentPath={currentPath} alternatePath={alternatePath} alternateLangLabel={languageMeta[otherLang].label} />
+    <Navbar lang={lang} currentPath={currentPath} />
     <main id="main-content">
       <slot />
     </main>

@@ -8,11 +8,14 @@
 
 export type Lang = "id" | "en";
 
-export const languages = ["id", "en"] as const;
+/**
+ * Languages the site is published in. Indonesian articles stay in src/content
+ * as an archive, but only English is routed, listed and included in the sitemap.
+ */
+export const languages = ["en"] as const;
 
 /**
- * Language used for the root redirect (/), x-default hreflang and for
- * translation fallbacks. Change to "en" if English is your primary language.
+ * Language used for interface copy, metadata and translation fallbacks.
  */
 export const defaultLanguage: Lang = "en";
 

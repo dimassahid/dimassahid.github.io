@@ -385,26 +385,17 @@ export function isLang(value: string | null | undefined): value is Lang {
   return typeof value === "string" && (siteLanguages as readonly string[]).includes(value);
 }
 
-export function otherLanguage(lang: Lang): Lang {
-  return lang === "id" ? "en" : "id";
-}
-
 export function htmlLang(lang: Lang): string {
   return languageMeta[lang].htmlLang;
 }
 
-/** Turn a language-neutral route ("/notes/") into a localized one ("/en/notes/"). */
-export function localizePath(path: string, lang: Lang): string {
+/**
+ * Every page is served from the site root (English only), so this only
+ * normalizes slashes: "/notes/" stays "/notes/" and "" becomes "/".
+ */
+export function localizePath(path: string): string {
   const clean = path.replace(/^\/+/, "").replace(/\/+$/, "");
-  return clean === "" ? `/${lang}/` : `/${lang}/${clean}/`;
-}
-
-/** "/en/notes/my-note/" -> { lang: "en", path: "/notes/my-note/" } */
-export function stripLanguagePrefix(pathname: string): { lang: Lang | null; path: string } {
-  const match = pathname.match(/^\/(id|en)(\/.*)?$/);
-  if (!match) return { lang: null, path: pathname };
-  const rest = match[2] || "/";
-  return { lang: match[1] as Lang, path: rest.startsWith("/") ? rest : `/${rest}` };
+  return clean === "" ? "/" : `/${clean}/`;
 }
 
 export function formatDate(value: string | Date | undefined, lang: Lang): string {

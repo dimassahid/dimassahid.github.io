@@ -1,24 +1,16 @@
 ---
 import type { Lang } from "../data/site";
 import { navigation, site } from "../data/site";
-import { useTranslations } from "../utils/i18n";
+import { localizePath, useTranslations } from "../utils/i18n";
 
 interface Props {
   lang: Lang;
-  /** Language-neutral path of the current page, e.g. "/notes/". */
+  /** Current page path, e.g. "/notes/". Used for the active nav item. */
   currentPath: string;
-  /** Same page in the other language, when it exists. */
-  alternatePath: string;
-  alternateLangLabel: string;
 }
 
-const { lang, currentPath, alternatePath, alternateLangLabel } = Astro.props;
+const { lang, currentPath } = Astro.props;
 const t = useTranslations(lang);
-
-function localized(path: string): string {
-  const clean = path.replace(/^\/+/, "").replace(/\/+$/, "");
-  return clean === "" ? `/${lang}/` : `/${lang}/${clean}/`;
-}
 
 function isActive(path: string): boolean {
   if (path === "/") return currentPath === "/";
@@ -27,14 +19,14 @@ function isActive(path: string): boolean {
 
 const navItems = navigation.map((item) => ({
   ...item,
-  href: localized(item.path),
+  href: localizePath(item.path),
   active: isActive(item.path)
 }));
 ---
 
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href={`/${lang}/`} aria-label={`${site.name} - ${t.common.home}`}>
+    <a class="brand" href="/" aria-label={`${site.name} - ${t.common.home}`}>
       <span class="brand-mark brand-mark-photo" aria-hidden="true">
         <img src="/images/logo-mark-sm.png" alt="" width="96" height="128" loading="eager" decoding="async" />
       </span>
@@ -53,15 +45,6 @@ const navItems = navigation.map((item) => ({
     </nav>
 
     <div class="header-actions">
-      <a
-        class="icon-btn lang-toggle"
-        href={alternatePath}
-        hreflang={lang === "id" ? "en" : "id"}
-        aria-label={`${t.common.switchLanguage}: ${alternateLangLabel}`}
-        title={`${t.common.switchLanguage}: ${alternateLangLabel}`}
-      >
-        {lang === "id" ? "EN" : "ID"}
-      </a>
       <button
         type="button"
         class="icon-btn theme-toggle"

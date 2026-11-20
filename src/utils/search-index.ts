@@ -1,10 +1,9 @@
 /**
  * Shared client-side search index builder.
  *
- * Emitted as a static endpoint per language (`src/pages/<lang>/search-index.json.ts`)
- * so the client can always fetch `/<lang>/search-index.json`. A parameterized
- * endpoint would be served at `/<lang>/search-index.json/` in dev because of
- * `trailingSlash: "always"`.
+ * Emitted as a single static endpoint (`src/pages/search-index.json.ts`) so the
+ * client can fetch `/search-index.json`. A parameterized endpoint would be
+ * served at `/search-index.json/` in dev because of `trailingSlash: "always"`.
  */
 import { type Lang } from "../data/site";
 import { getPost, getPosts, sections, type Post } from "./content";

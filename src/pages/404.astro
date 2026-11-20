@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { defaultLanguage, languages, site, type Lang } from "../data/site";
+import { defaultLanguage } from "../data/site";
 import { useTranslations } from "../utils/i18n";
 
-const lang: Lang = defaultLanguage;
+const lang = defaultLanguage;
 const t = useTranslations(lang);
 ---
 
@@ -21,15 +21,8 @@ const t = useTranslations(lang);
       <h1>{t.notFound.title}</h1>
       <p>{t.notFound.text}</p>
       <div class="btn-row">
-        <a class="btn btn-primary" href={`/${lang}/`}>{t.notFound.cta}</a>
-        <a class="btn" href={`/${lang}/notes/`}>{t.notFound.notesCta}</a>
-        {languages
-          .filter((code) => code !== lang)
-          .map((code) => (
-            <a class="btn btn-ghost" href={`/${code}/`} hreflang={code}>
-              {site.name} / {code.toUpperCase()}
-            </a>
-          ))}
+        <a class="btn btn-primary" href="/">{t.notFound.cta}</a>
+        <a class="btn" href="/notes/">{t.notFound.notesCta}</a>
       </div>
     </div>
   </section>

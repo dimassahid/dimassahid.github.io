@@ -1,21 +1,16 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { credentials, experience, expertise, languages, philosophy, site, skillGroups, summary, yearsOfExperience, type Lang } from "../../data/site";
-import { useTranslations } from "../../utils/i18n";
-import { breadcrumbJsonLd } from "../../utils/seo";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { credentials, defaultLanguage, experience, expertise, philosophy, site, skillGroups, summary, yearsOfExperience } from "../data/site";
+import { useTranslations } from "../utils/i18n";
+import { breadcrumbJsonLd } from "../utils/seo";
 
-export function getStaticPaths() {
-  return languages.map((lang) => ({ params: { lang } }));
-}
-
-const lang = Astro.params.lang as Lang;
+const lang = defaultLanguage;
 const t = useTranslations(lang);
 const years = yearsOfExperience();
-const alternates = { id: "/id/about/", en: "/en/about/" } as const;
 const jsonLd = [
   breadcrumbJsonLd([
-    { label: "Home", path: `/${lang}/` },
-    { label: t.about.title, path: `/${lang}/about/` }
+    { label: "Home", path: "/" },
+    { label: t.about.title, path: "/about/" }
   ])
 ];
 ---
@@ -24,15 +19,14 @@ const jsonLd = [
   lang={lang}
   title={t.about.title}
   description={site.intro[lang]}
-  canonicalPath={`/${lang}/about/`}
-  alternates={alternates}
+  canonicalPath="/about/"
   jsonLd={jsonLd}
 >
   <header class="page-header">
     <div class="wrap">
       <nav class="breadcrumbs" aria-label={t.common.menu}>
         <ol>
-          <li><a href={`/${lang}/`}>{t.common.home}</a></li>
+          <li><a href="/">{t.common.home}</a></li>
           <li aria-current="page">{t.about.title}</li>
         </ol>
       </nav>
@@ -180,7 +174,7 @@ const jsonLd = [
           <h2 class="card-title" style="font-size: 1.05rem;">{t.contact.title}</h2>
           <p class="card-text">{t.about.contactText}</p>
           <div class="stack" style="margin-top: 1rem;">
-            <a class="btn btn-primary btn-sm" href={`/${lang}/contact/`}>{t.home.contactLink}</a>
+            <a class="btn btn-primary btn-sm" href="/contact/">{t.home.contactLink}</a>
             <a class="btn btn-sm" href={`mailto:${site.email}`}>{site.email}</a>
           </div>
         </div>

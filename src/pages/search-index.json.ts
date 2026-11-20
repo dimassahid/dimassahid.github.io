@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro";
-import { buildSearchIndex } from "../../utils/search-index";
+import { defaultLanguage } from "../data/site";
+import { buildSearchIndex } from "../utils/search-index";
 
 export const GET: APIRoute = async () =>
-  new Response(JSON.stringify(await buildSearchIndex("en")), {
+  new Response(JSON.stringify(await buildSearchIndex(defaultLanguage)), {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "public, max-age=3600"

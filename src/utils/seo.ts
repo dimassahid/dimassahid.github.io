@@ -15,28 +15,6 @@ export function formatPageTitle(title?: string): string {
   return `${title} | ${site.name}`;
 }
 
-export interface AlternateLink {
-  hreflang: string;
-  href: string;
-}
-
-/**
- * hreflang links for a page that exists in both languages.
- * `paths` maps a language to the site-relative path of the same content.
- */
-export function alternateLinks(paths: Partial<Record<Lang, string>>): AlternateLink[] {
-  const links: AlternateLink[] = [];
-  for (const [lang, path] of Object.entries(paths)) {
-    if (!path) continue;
-    links.push({ hreflang: languageMeta[lang as Lang].htmlLang, href: absoluteUrl(path) });
-  }
-  const fallback = paths.en ?? paths.id;
-  if (fallback) {
-    links.push({ hreflang: "x-default", href: absoluteUrl(fallback) });
-  }
-  return links;
-}
-
 export function personJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -63,7 +41,7 @@ export function websiteJsonLd(lang: Lang) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: site.name,
-    url: `${siteUrl}/${lang}/`,
+    url: `${siteUrl}/`,
     inLanguage: languageMeta[lang].htmlLang,
     description: site.description[lang],
     publisher: { "@type": "Person", name: site.name }
